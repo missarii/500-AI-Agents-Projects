@@ -1,64 +1,63 @@
-# 500+ AI Agent Projects & Use Cases
+---
 
-<div align="center">
+## 📊 Framework Comparison
 
-[![GitHub Stars](https://img.shields.io/github/stars/ashishpatel26/500-AI-Agents-Projects?style=for-the-badge&color=yellow)](https://github.com/ashishpatel26/500-AI-Agents-Projects/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/ashishpatel26/500-AI-Agents-Projects?style=for-the-badge&color=blue)](https://github.com/ashishpatel26/500-AI-Agents-Projects/network/members)
-[![Contributors](https://img.shields.io/github/contributors/ashishpatel26/500-AI-Agents-Projects?style=for-the-badge&color=green)](https://github.com/ashishpatel26/500-AI-Agents-Projects/graphs/contributors)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=for-the-badge)](CONTRIBUTION.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-red?style=for-the-badge)](LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/ashishpatel26/500-AI-Agents-Projects?style=for-the-badge)](https://github.com/ashishpatel26/500-AI-Agents-Projects/commits/main)
+Choosing a framework? Here's when to use each:
 
-**The most comprehensive collection of AI agent projects, use cases, and working implementations.**
+| Framework | Best For | Complexity | Multi-Agent | Streaming | Local LLM |
+|---|---|---|---|---|---|
+| **LangGraph** | Stateful workflows, RAG pipelines, complex graphs | ⭐⭐⭐ | ✅ | ✅ | ✅ |
+| **CrewAI** | Role-based teams, business automation, rapid prototyping | ⭐⭐ | ✅ | ✅ | ✅ |
+| **AutoGen** | Code generation, research, self-healing workflows | ⭐⭐⭐ | ✅ | ✅ | ✅ |
+| **Agno** | Lightweight single agents, tool integration, fast iteration | ⭐ | ✅ | ✅ | ✅ |
+| **LlamaIndex** | Document Q&A, enterprise RAG, data pipelines | ⭐⭐ | ⚠️ | ✅ | ✅ |
 
-[🚀 Quick Start](#-quick-start) • [🗺️ Browse Agents](#-browse-by-framework) • [🏭 By Industry](#-industry-use-cases) • [🤝 Contribute](#-contributing) • [📊 Frameworks Compared](#-framework-comparison)
-
-</div>
+**Quick decision guide:**
+- Just starting out → **Agno** or **CrewAI**
+- Need stateful graphs + RAG → **LangGraph**
+- Building code-writing / research agents → **AutoGen**
+- Enterprise document pipelines → **LlamaIndex**
 
 ---
 
-![AI Agent Use Cases](images/AIAgentUseCase.jpg)
+## 🏭 Industry Use Cases
 
-## What is this?
+![Industry Mind Map](images/industry_usecase1.png)
 
-A curated collection of **500+ AI agent projects** — production examples, tutorials, and working code spanning every major framework (LangGraph, CrewAI, AutoGen, Agno) and industry (Healthcare, Finance, Education, Cybersecurity, and more).
-
-**Who it's for:**
-- 🧑‍💻 **Developers** building their first or next AI agent
-- 🔬 **Researchers** surveying the agent landscape
-- 🏢 **Teams** evaluating frameworks for production use
-- 🎓 **Students** learning agent architectures from real examples
+| Use Case | Industry | Description | Code |
+|---|---|---|---|
+| **HIA (Health Insights Agent)** | Healthcare | Analyses medical reports and provides health insights | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/harshhh28/hia) |
+| **AI Health Assistant** | Healthcare | Diagnoses and monitors diseases using patient data | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/ahmadvh/AI-Agents-for-Medical-Diagnostics) |
+| **Automated Trading Bot** | Finance | Automates stock trading with real-time market analysis | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/MingyuJ666/Stockagent) |
+| **Agent Wallet SDK** | Finance | Non-custodial smart contract wallet SDK for AI agents with enforced spend limits | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/up2itnow0822/agent-wallet-sdk) |
+| **Virtual AI Tutor** | Education | Provides personalized education tailored to users | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/hqanhh/EduGPT) |
+| **24/7 AI Chatbot** | Customer Service | Handles customer queries around the clock | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/NirDiamant/GenAI_Agents/blob/main/all_agents_tutorials/customer_support_agent_langgraph.ipynb) |
+| **Product Recommendation Agent** | Retail | Suggests products based on user preferences and history | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/microsoft/RecAI) |
+| **Self-Driving Delivery Agent** | Transportation | Optimizes routes and autonomously delivers packages | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/sled-group/driVLMe) |
+| **Factory Process Monitoring Agent** | Manufacturing | Monitors production lines and ensures quality control | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/yuchenxia/llm4ias) |
+| **Property Pricing Agent** | Real Estate | Analyzes market trends to determine property prices | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/AleksNeStu/ai-real-estate-assistant) |
+| **Smart Farming Assistant** | Agriculture | Provides insights on crop health and yield predictions | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/mohammed97ashraf/LLM_Agri_Bot) |
+| **Energy Demand Forecasting Agent** | Energy | Predicts energy usage to optimize grid management | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/yecchen/MIRAI) |
+| **Content Personalization Agent** | Entertainment | Recommends personalized media based on preferences | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/crosleythomas/MirrorGPT) |
+| **Legal Document Review Assistant** | Legal | Automates document review and highlights key clauses | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/firica/legalai) |
+| **Recruitment Recommendation Agent** | Human Resources | Suggests best-fit candidates for job openings | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/sentient-engineering/jobber) |
+| **Virtual Travel Assistant** | Hospitality | Plans travel itineraries based on preferences | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/nirbar1985/ai-travel-agent) |
+| **AI Game Companion Agent** | Gaming | Enhances player experience with real-time assistance | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/onjas-buidl/LLM-agent-game) |
+| **Real-Time Threat Detection Agent** | Cybersecurity | Identifies potential threats and mitigates attacks | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/NVISOsecurity/cyber-security-llm-agents) |
+| **E-commerce Personal Shopper Agent** | E-commerce | Helps customers find products they'll love | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/Hoanganhvu123/ShoppingGPT) |
+| **Logistics Optimization Agent** | Supply Chain | Plans efficient delivery routes and manages inventory | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/microsoft/OptiGuide) |
+| **Vibe Hacking Agent** | Cybersecurity | Autonomous Multi-Agent Based Red Team Testing Service | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/PurpleAILAB/Decepticon) |
+| **Agent Memory Guard** | Cybersecurity | Detects and blocks memory poisoning attacks (OWASP ASI06) in AI agent memory stores | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/OWASP/www-project-agent-memory-guard) |
+| **Citadel** | Software Development | Orchestrates Claude Code agent fleets with lifecycle hooks, skills, campaign management, and postmortem-driven architecture | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/SethGammon/Citadel) |
+| **MediSuite-AI-Agent** | Health Insurance | Automates hospital / insurance claiming workflow | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/ahmedmansour5/MediSuite-Ai-Agent) |
+| **Lina Egyptian Medical Chatbot** | Healthcare | Egyptian medical assistant chatbot | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/dina-khalid/Lina-Egyptian-Medical-Chatbot) |
+| **NextRole (AI Career Assistant)** | Human Resources | Tailors a resume to a job description and generates interview prep plus a day-of battlecard via a multi-agent system | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/tam159/next-role) |
+| **PII Sanitization Agent** | Privacy/Compliance | Redacts PII (emails, phones, national IDs, bank accounts, API keys) from text before it reaches an LLM; fail-closed, multilingual, on-chain proof via TrustBoost | [![GitHub](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/teodorofodocrispin-cmyk/TrustBoost-PII-Sanitizer) |
 
 ---
 
-## ⚡ Quick Start
+## 🔧 Browse by Framework
 
-Pick a framework and run an agent in under 5 minutes:
+### CrewAI
 
-```bash
-# Clone the repo
-git clone https://github.com/ashishpatel26/500-AI-Agents-Projects.git
-cd 500-AI-Agents-Projects
-
-# Run any agent from the agents/ directory
-cd agents/01-web-research-agent
-pip install -r requirements.txt
-cp .env.example .env        # add your API key
-python agent.py
-```
-
-> All agents in `agents/` are self-contained with their own `requirements.txt` and `.env.example`. No monorepo setup needed.
-
----
-
-## 🗺️ Navigation Guide
-
-| I want to... | Go to |
-|---|---|
-| Run a working agent right now | [`agents/`](agents/) |
-| Browse by AI framework | [Framework-wise Use Cases](#-browse-by-framework) |
-| Browse by industry | [Industry Use Cases](#-industry-use-cases) |
-| Understand which framework to use | [Framework Comparison](#-framework-comparison) |
-| Add my own agent | [Contributing](CONTRIBUTION.md) |
-| Learn with a course | [`crewai_mcp_course/`](crewai_mcp_course/) |
-
+Role-based multi-agent framework. Great for business automation.

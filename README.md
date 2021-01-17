@@ -1,64 +1,63 @@
+| 🧠 Solving Complex Tasks with Nested Chats | Problem Solving | Uses nested chats to solve hierarchical and complex problems | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchat_nestedchat) |
+| 🔄 Sequence of Nested Chats | Problem Solving | Demonstrates sequential task-solving using nested chats | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchat_nested_sequential_chats) |
+| 🏭 OptiGuide Supply Chain with Nested Chats | Supply Chain | Solves supply chain optimization using nested chats | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchat_nestedchat_optiguide) |
+| ♟️ Conversational Chess with Nested Chats | Gaming | Uses nested chats for playing conversational chess with tools | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchat_nested_chats_chess) |
 
-| Use Case | Industry | Description | GitHub |
+**Tools**
+
+| Use Case | Industry | Description | Notebook |
 |---|---|---|---|
-| 📧 Email Auto Responder Flow | Communication | Automates email responses based on predefined criteria | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/flows/email_auto_responder_flow) |
-| 📝 Meeting Assistant Flow | Productivity | Organizes meetings, scheduling and agenda preparation | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/flows/meeting_assistant_flow) |
-| 🔄 Self Evaluation Loop Flow | Human Resources | Facilitates self-assessment for performance reviews | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/flows/self_evaluation_loop_flow) |
-| 📈 Lead Score Flow | Sales | Evaluates and scores potential leads to prioritize outreach | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/flows/lead-score-flow) |
-| 📊 Marketing Strategy Generator | Marketing | Develops marketing strategies by analyzing market trends | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/crews/marketing_strategy) |
-| 📝 Job Posting Generator | Recruitment | Creates job postings by analyzing job requirements | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/crews/job-posting) |
-| 🔄 Recruitment Workflow | Recruitment | Streamlines recruitment by automating hiring tasks | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/crews/recruitment) |
-| 🔍 Match Profile to Positions | Recruitment | Matches candidate profiles to suitable job positions | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/crews/match_profile_to_positions) |
-| 📸 Instagram Post Generator | Social Media | Generates and schedules Instagram posts automatically | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/crews/instagram_post) |
-| 🌐 Landing Page Generator | Web Development | Automates creation of landing pages for websites | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/crews/landing_page_generator) |
-| 🎮 Game Builder Crew | Game Development | Assists in game development by automating aspects of creation | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/crews/game-builder-crew) |
-| 💹 Stock Analysis Tool | Finance | Provides tools for analyzing stock market data | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/crews/stock_analysis) |
-| 🗺️ Trip Planner | Travel | Assists in planning trips with itineraries | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/crews/trip_planner) |
-| 🎁 Surprise Trip Planner | Travel | Plans surprise trips based on user preferences | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/crews/surprise_trip) |
-| 📚 Write a Book with Flows | Creative Writing | Assists authors with structured writing workflows | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/flows/write_a_book_with_flows) |
-| 🎬 Screenplay Writer | Creative Writing | Aids in writing screenplays with templates and guidance | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/crews/screenplay_writer) |
-| ✅ Markdown Validator | Documentation | Validates Markdown files for proper formatting | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/crews/markdown_validator) |
-| 🧠 Meta Quest Knowledge | Knowledge Management | Manages Meta Quest knowledge for information retrieval | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/crews/meta_quest_knowledge) |
-| 🤖 NVIDIA Models Integration | AI Integration | Integrates NVIDIA AI models into workflows | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/integrations/nvidia_models) |
-| 🗂️ Prep for a Meeting | Productivity | Prepares meeting materials and sets agendas | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/crews/prep-for-a-meeting) |
-| 🛠️ Starter Template | Development | Starter template for new CrewAI projects | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/crews/starter_template) |
-| 🔗 CrewAI + LangGraph Integration | AI Integration | Integration between CrewAI and LangGraph | [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/crewAIInc/crewAI-examples/tree/main/integrations/CrewAI-LangGraph) |
+| 🌐 Web Search: Solve Tasks Requiring Web Info | Information Retrieval | Searches the web to gather information for completing tasks | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://github.com/microsoft/autogen/blob/0.2/notebook/agentchat_web_info.ipynb) |
+| 🔧 Use Provided Tools as Functions | Tool Integration | Demonstrates how to use pre-provided tools as callable functions | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchat_function_call_currency_calculator) |
+| 📚 RAG Group Chat | Collaboration | Enables group chat with Retrieval Augmented Generation | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchat_groupchat_RAG) |
+| 🔊 Agent Chat with Whisper | Audio Processing | AI agent for transcription and translation using Whisper | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchat_video_transcript_translate_with_whisper) |
+| 📊 SQL: Natural Language to SQL Query | Database Management | Converts natural language inputs into SQL queries | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://github.com/microsoft/autogen/blob/0.2/notebook/agentchat_sql_spider.ipynb) |
+
+**Multimodal Agents**
+
+| Use Case | Industry | Description | Notebook |
+|---|---|---|---|
+| 🎨 Multimodal Agent with DALLE and GPT-4V | Multimedia AI | Combines DALLE and GPT-4V for multimodal agent communication | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://github.com/microsoft/autogen/blob/0.2/notebook/agentchat_dalle_and_gpt4v.ipynb) |
+| 🖌️ Multimodal Agent with Llava | Image Processing | Uses Llava for multimodal agent conversations | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://github.com/microsoft/autogen/blob/0.2/notebook/agentchat_lmm_llava.ipynb) |
+| 🖼️ Multimodal Agent with GPT-4V | Multimedia AI | Leverages GPT-4V for visual and conversational interactions | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://github.com/microsoft/autogen/blob/0.2/notebook/agentchat_lmm_gpt-4v.ipynb) |
+
+**Observability & Evaluation**
+
+| Use Case | Industry | Description | Notebook |
+|---|---|---|---|
+| 📊 AgentEval: Multi-Agent Assessment System | Performance Evaluation | Evaluating LLM-based application utility | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://github.com/microsoft/autogen/blob/0.2/notebook/agenteval_cq_math.ipynb) |
+| 📊 Track LLM Calls and Errors using AgentOps | Monitoring & Analytics | Monitors LLM interactions, tool usage, and errors | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://github.com/microsoft/autogen/blob/0.2/notebook/agentchat_agentops.ipynb) |
+| 🏗️ Auto Build Multi-agent System with AgentBuilder | AI Development | Automatically builds multi-agent systems | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://github.com/microsoft/autogen/blob/0.2/notebook/autobuild_basic.ipynb) |
 
 ---
 
-### AutoGen
+### Agno
 
-Microsoft's framework for code generation, execution, and multi-agent research.
+Lightweight, fast agent framework. Best for single-agent tools and rapid prototyping.
 
-**Code Generation, Execution, and Debugging**
-
-| Use Case | Industry | Description | Notebook |
+| Use Case | Industry | Description | Code |
 |---|---|---|---|
-| 🤖 Automated Task Solving with Code Gen, Execution & Debugging | Software Development | Demonstrates automated task-solving by generating, executing, and debugging code | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchat_auto_feedback_from_code_execution) |
-| 🧑‍💻 Code Generation and Q&A with Retrieval Augmented Agents | Software Development | Generates code and answers questions using retrieval-augmented methods | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchat_RetrieveChat) |
-| 🧠 Code Generation and Q&A with Qdrant-based Retrieval | Software Development | Utilizes Qdrant for enhanced retrieval-augmented agent performance | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchat_RetrieveChat_qdrant) |
+| 🤖 Support Agent | AI Framework Support | Real-time answers, explanations, and code examples for Agno framework | [![Python](https://img.shields.io/static/v1?label=AI+Agent+Code&message=Python&color=%23244cd1)](https://github.com/agno-agi/agno/blob/main/cookbook/examples/agents/agno_support_agent.py) |
+| 🎥 YouTube Agent | Media & Content | Analyzes YouTube videos: summaries, timestamps, themes | [![Python](https://img.shields.io/static/v1?label=AI+Agent+Code&message=Python&color=%23244cd1)](https://github.com/agno-agi/agno/blob/main/cookbook/examples/agents/youtube_agent.py) |
+| 📊 Finance Agent (Thinking) | Finance | Real-time stock insights, analyst recommendations, financial deep-dives | [![Python](https://img.shields.io/static/v1?label=AI+Agent+Code&message=Python&color=%23244cd1)](https://github.com/agno-agi/agno/blob/main/cookbook/examples/agents/thinking_finance_agent.py) |
+| 📚 Study Partner | Education | Finds resources, answers questions, creates study plans | [![Python](https://img.shields.io/static/v1?label=AI+Agent+Code&message=Python&color=%23244cd1)](https://github.com/agno-agi/agno/blob/main/cookbook/examples/agents/study_partner.py) |
+| 🛍️ Shopping Partner Agent | E-commerce | Product recommender based on preferences from Amazon, Flipkart | [![Python](https://img.shields.io/static/v1?label=AI+Agent+Code&message=Python&color=%23244cd1)](https://github.com/agno-agi/agno/blob/main/cookbook/examples/agents/shopping_partner.py) |
+| 🎓 Research Scholar Agent | Education / Research | Advanced academic searches, publication analysis, structured reports | [![Python](https://img.shields.io/static/v1?label=AI+Agent+Code&message=Python&color=%23244cd1)](https://github.com/agno-agi/agno/blob/main/cookbook/examples/agents/research_agent_exa.py) |
+| 🧠 Research Agent | Media & Journalism | Deep investigations, NYT-style reports | [![Python](https://img.shields.io/static/v1?label=AI+Agent+Code&message=Python&color=%23244cd1)](https://github.com/agno-agi/agno/blob/main/cookbook/examples/agents/research_agent.py) |
+| 🍳 Recipe Creator | Food & Culinary | Personalized recipes based on ingredients and preferences | [![Python](https://img.shields.io/static/v1?label=AI+Agent+Code&message=Python&color=%23244cd1)](https://github.com/agno-agi/agno/blob/main/cookbook/examples/agents/recipe_creator.py) |
+| 🧠 Financial Reasoning Agent | Finance | Claude 3.5 Sonnet-based stock analysis with Yahoo Finance data | [![Python](https://img.shields.io/static/v1?label=AI+Agent+Code&message=Python&color=%23244cd1)](https://github.com/agno-agi/agno/blob/main/cookbook/examples/agents/reasoning_finance_agent.py) |
+| 🤖 Readme Generator Agent | Software Dev | Generates high-quality READMEs for GitHub repos | [![Python](https://img.shields.io/static/v1?label=AI+Agent+Code&message=Python&color=%23244cd1)](https://github.com/agno-agi/agno/blob/main/cookbook/examples/agents/readme_generator.py) |
+| 🎬 Movie Recommendation Agent | Entertainment | Personalized movie recommendations using Exa and GPT-4o | [![Python](https://img.shields.io/static/v1?label=AI+Agent+Code&message=Python&color=%23244cd1)](https://github.com/agno-agi/agno/blob/main/cookbook/examples/agents/movie_recommedation.py) |
+| 🔍 Media Trend Analysis Agent | Media & News | Analyzes emerging trends and influencers from digital platforms | [![Python](https://img.shields.io/static/v1?label=AI+Agent+Code&message=Python&color=%23244cd1)](https://github.com/agno-agi/agno/blob/main/cookbook/examples/agents/media_trend_analysis_agent.py) |
+| ⚖️ Legal Document Analysis Agent | Legal Tech | Analyzes legal PDFs and provides insights using vector embeddings | [![Python](https://img.shields.io/static/v1?label=AI+Agent+Code&message=Python&color=%23244cd1)](https://github.com/agno-agi/agno/blob/main/cookbook/examples/agents/legal_consultant.py) |
+| 🤔 DeepKnowledge | Research | Iterative search through knowledge base with deep reasoning | [![Python](https://img.shields.io/static/v1?label=AI+Agent+Code&message=Python&color=%23244cd1)](https://github.com/agno-agi/agno/blob/main/cookbook/examples/agents/deep_knowledge.py) |
+| 📚 Book Recommendation Agent | Publishing & Media | Personalized book suggestions using literary data and reader preferences | [![Python](https://img.shields.io/static/v1?label=AI+Agent+Code&message=Python&color=%23244cd1)](https://github.com/agno-agi/agno/blob/main/cookbook/examples/agents/book_recommendation.py) |
+| 🏠 MCP Airbnb Agent | Hospitality | Search Airbnb listings with MCP and Llama 4 | [![Python](https://img.shields.io/static/v1?label=AI+Agent+Code&message=Python&color=%23244cd1)](https://github.com/agno-agi/agno/blob/main/cookbook/examples/agents/airbnb_mcp.py) |
+| 🤖 Agno Assist Agent | AI Framework | GPT-4o agent for Agno framework Q&A with hybrid search | [![Python](https://img.shields.io/static/v1?label=AI+Agent+Code&message=Python&color=%23244cd1)](https://github.com/agno-agi/agno/blob/main/cookbook/examples/agents/agno_assist.py) |
 
-**Multi-Agent Collaboration**
+---
 
-| Use Case | Industry | Description | Notebook |
-|---|---|---|---|
-| 🤝 Group Chat (3 members, 1 manager) | Collaboration | Demonstrates group task-solving via multi-agent collaboration | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchat_groupchat) |
-| 📊 Data Visualization by Group Chat | Data Analysis | Uses multi-agent collaboration to create data visualizations | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchat_groupchat_vis) |
-| 🧩 Complex Task Solving by Group Chat (6 members) | Collaboration | Solves complex tasks collaboratively with a larger group | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchat_groupchat_research) |
-| 🧑‍💻 Task Solving with Coding & Planning Agents | Planning & Dev | Combines coding and planning agents for solving tasks | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://github.com/microsoft/autogen/blob/0.2/notebook/agentchat_planning.ipynb) |
-| 📐 Task Solving with Graph Transition Paths | Collaboration | Uses predefined transition paths in a graph for solving tasks | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/docs/notebooks/agentchat_groupchat_finite_state_machine) |
-| 🧠 SocietyOfMindAgent Inner-Monologue | Cognitive Sciences | Simulates inner-monologue for problem-solving using group chats | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchat_society_of_mind) |
-| 🔧 Group Chat with Custom Speaker Selection | Collaboration | Implements a custom function for speaker selection | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchat_groupchat_customized) |
+### LangGraph
 
-**Sequential Multi-Agent Chats**
+State-machine framework for complex, stateful agent workflows and RAG pipelines.
 
-| Use Case | Industry | Description | Notebook |
-|---|---|---|---|
-| 🔄 Sequential Task-Solving (single initiating agent) | Workflow Automation | Automates sequential task-solving with a single initiating agent | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchat_multi_task_chats) |
-| ⏳ Async Sequential Task-Solving | Workflow Automation | Handles asynchronous task-solving in a sequence of chats | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchat_multi_task_async_chats) |
-| 🤝 Sequential Chats with Different Initiating Agents | Workflow Automation | Sequential task-solving with different agents initiating each chat | [![Notebook](https://img.shields.io/badge/View-Notebook-blue?logo=jupyter)](https://microsoft.github.io/autogen/0.2/docs/notebooks/agentchats_sequential_chats) |
-
-**Nested Chats**
-
-| Use Case | Industry | Description | Notebook |
-|---|---|---|---|

@@ -1,0 +1,12 @@
+{
+  // Scoped to the docs contributors actually edit. The course content and
+  // internal notes are left alone on purpose.
+  "globs": ["README.md", "CONTRIBUTION.md", "SECURITY.md", "CODE_OF_CONDUCT.md", "agents/**/*.md"],
+
+  "config": {
+    // Cosmetic rules are off on purpose - this repo is tables and badges, and
+    // reformatting 400 lines to satisfy a linter buys nothing.
+    "MD013": false, // line length - every table row exceeds 80 chars
+    "MD022": false, // blank lines around headings
+    "MD031": false, // blank lines around fences
+    "MD032": false, // blank lines around lists

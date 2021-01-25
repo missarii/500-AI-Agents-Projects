@@ -1,15 +1,14 @@
----
-name: Bug Report
-about: Report a broken link, broken agent, or documentation error
-title: '[BUG] '
-labels: 'bug'
-assignees: 'ashishpatel26'
----
+- [ ] Agent code not working
+- [ ] Missing dependency / requirements issue
+- [ ] Documentation error
+- [ ] Other
 
-## Bug Description
+## Steps to Reproduce
 
-A clear description of what the bug is.
+1. Go to '...'
+2. Click on '...'
+3. Run '...'
+4. See error
 
-## Type of Issue
+## Expected Behavior
 
-- [ ] Broken link in README

@@ -1,14 +1,15 @@
-- [ ] Agent code not working
-- [ ] Missing dependency / requirements issue
-- [ ] Documentation error
-- [ ] Other
+What you expected to happen.
 
-## Steps to Reproduce
+## Actual Behavior
 
-1. Go to '...'
-2. Click on '...'
-3. Run '...'
-4. See error
+What actually happened. Include error messages, screenshots, or logs.
 
-## Expected Behavior
+## Environment (if applicable)
 
+- OS: [e.g. Ubuntu 22.04]
+- Python version: [e.g. 3.11]
+- Framework version: [e.g. crewai==0.80.0]
+
+## Additional Context
+
+Add any other context about the problem here.

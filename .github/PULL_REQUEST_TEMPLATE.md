@@ -1,15 +1,16 @@
-## Summary
+- **Framework**: [LangGraph / CrewAI / AutoGen / Agno / LlamaIndex / Other]
+- **Industry**: 
+- **Folder**: `agents/your-agent-name/`
 
-Brief description of what this PR adds or changes.
+## How to Run (if adding code)
 
-## Type of Change
+```bash
+cd agents/your-agent-name
+pip install -r requirements.txt
+cp .env.example .env  # fill in your API keys
+python agent.py
+```
 
-- [ ] New agent implementation (adds runnable code)
-- [ ] New use case link (adds external project to table)
-- [ ] Bug fix (fixes broken link, typo, or error)
-- [ ] Documentation improvement
-- [ ] New framework coverage
-
-## Agent Details (if adding new agent)
-
-- **Agent name**: 
+Expected output:
+```
+# paste sample output here

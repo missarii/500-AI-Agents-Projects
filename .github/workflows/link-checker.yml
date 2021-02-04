@@ -1,19 +1,19 @@
-name: Link Checker
+  check-links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-on:
-  schedule:
-    - cron: '0 0 * * 1'  # every Monday at midnight UTC
-  push:
-    branches: [main]
-    paths:
-      - 'README.md'
-  pull_request:
-    paths:
-      - 'README.md'
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  issues: write
-
-jobs:
+      - name: Check links in README
+        uses: lycheeverse/lychee-action@v1
+        with:
+          args: |
+            --verbose
+            --no-progress
+            --exclude 'shields.io'
+            --exclude 'star-history.com'
+            --exclude 'img.shields.io'
+            --exclude 'api.star-history.com'
+            --exclude 'github\.com/ashishpatel26/500-AI-Agents-Projects'
+            --exclude 'github.com/langchain-ai/langgraph/blob/main/docs/docs/tutorials'
+            --exclude 'github.com/agno-agi/agno/blob/main/cookbook/examples'
+            --timeout 30

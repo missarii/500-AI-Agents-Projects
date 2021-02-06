@@ -1,22 +1,22 @@
-name: Stale
 
-on:
-  schedule:
-    - cron: '0 3 * * 1'  # Mondays, 03:00 UTC
-  workflow_dispatch:
+          stale-pr-message: >
+            This PR has had no activity for 60 days, so I'm marking it stale.
 
-permissions:
-  issues: write
-  pull-requests: write
 
-jobs:
-  stale:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/stale@v9
-        with:
-          # Deliberately generous. Contributors here are volunteers adding a row
-          # to a catalog, not staff. The goal is to close what has genuinely been
-          # abandoned, not to rush anyone.
-          days-before-stale: 60
-          days-before-close: 21
+            If you're still interested, just push a commit or leave a comment and
+            I'll take the label off. Rebasing onto current `main` is usually all
+            it needs — this README changes often and older branches stop merging
+            cleanly.
+
+
+            If I don't hear anything in 21 days it'll close automatically. That's
+            not a rejection and you can reopen it any time.
+
+          close-pr-message: >
+            Closing this after 81 days without activity.
+
+
+            No hard feelings and nothing personal — I'd rather keep the queue
+            honest than leave PRs sitting open indefinitely with no answer.
+            Reopen it whenever you like, or open a fresh one against current
+            `main`.

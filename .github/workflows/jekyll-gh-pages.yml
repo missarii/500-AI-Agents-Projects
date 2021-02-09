@@ -1,0 +1,21 @@
+name: Deploy React Atlas to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "web/**"
+      - "README.md"
+      - "agents/**"
+      - "crewai_mcp_course/**"
+      - ".github/workflows/jekyll-gh-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:

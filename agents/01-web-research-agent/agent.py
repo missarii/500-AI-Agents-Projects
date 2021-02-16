@@ -1,29 +1,30 @@
 
 
-def search_web(state: ResearchState) -> ResearchState:
-    tool = TavilySearch(max_results=5)
-    raw_results = tool.invoke(state["query"])
-    if isinstance(raw_results, dict):
-        results = raw_results.get("results", [])
-    elif isinstance(raw_results, list):
-        results = raw_results
-    else:
-        results = []
-    return {"search_results": results}
+def build_graph() -> StateGraph:
+    graph = StateGraph(ResearchState)
+    graph.add_node("search", search_web)
+    graph.add_node("synthesize", synthesize_report)
+    graph.set_entry_point("search")
+    graph.add_edge("search", "synthesize")
+    graph.add_edge("synthesize", END)
+    return graph.compile()
 
 
-def synthesize_report(state: ResearchState) -> ResearchState:
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+def main():
+    parser = argparse.ArgumentParser(description="Web Research Agent")
+    parser.add_argument("--query", default="latest advances in AI agents 2024", help="Research query")
+    args = parser.parse_args()
 
-    results_text = "\n\n".join(
-        f"Source: {r.get('url', 'N/A')}\nTitle: {r.get('title', 'N/A')}\nContent: {r.get('content', '')[:500]}"
-        for r in state["search_results"]
-    )
+    print(f"\n🔍 Researching: {args.query}\n")
 
-    messages = [
-        SystemMessage(content="You are a research analyst. Synthesize the search results into a clear, structured report with: Summary, Key Findings (bullet points), and Sources."),
-        HumanMessage(content=f"Research query: {state['query']}\n\nSearch results:\n{results_text}"),
-    ]
+    agent = build_graph()
+    result = agent.invoke({"query": args.query, "messages": [], "search_results": [], "report": ""})
 
-    response = llm.invoke(messages)
-    return {"report": response.content, "messages": [response]}
+    print("=" * 60)
+    print("📄 RESEARCH REPORT")
+    print("=" * 60)
+    print(result["report"])
+
+
+if __name__ == "__main__":
+    main()

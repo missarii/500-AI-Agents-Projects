@@ -1,20 +1,21 @@
+============================================================
+📄 RESEARCH REPORT
+============================================================
+## Summary
+AI agents have seen significant advances in 2024, with major improvements
+in reasoning, tool use, and multi-agent collaboration...
 
-Get free API keys:
-- OpenAI: https://platform.openai.com/api-keys
-- Tavily: https://app.tavily.com (free tier available)
+## Key Findings
+- LangGraph and CrewAI have emerged as leading frameworks for production agents
+- OpenAI's GPT-4o enables real-time multimodal agent interactions
+- ...
 
-## Run
-
-```bash
-# Default query
-python agent.py
-
-# Custom query
-python agent.py --query "latest advances in quantum computing"
+## Sources
+- https://...
 ```
 
-## Sample Output
+## Architecture
 
 ```
-🔍 Researching: latest advances in AI agents 2024
-
+User Query → [Search Node] → Tavily Web Search → [Synthesize Node] → GPT-4o → Report
+```

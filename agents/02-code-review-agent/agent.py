@@ -1,23 +1,22 @@
-1. **Bugs & Correctness** — logic errors, edge cases, exception handling
-2. **Security Issues** — injection risks, secrets exposure, unsafe operations
-3. **Performance** — inefficiencies, unnecessary computation, memory issues
-4. **Code Style** — PEP 8 violations, naming conventions, readability
-5. **Improvements** — refactoring suggestions, better patterns
+    group.add_argument("--code", help="Inline code snippet to review")
+    parser.add_argument("--language", default="python", help="Programming language (default: python)")
+    args = parser.parse_args()
 
-Format: Use markdown. Rate overall quality as: 🟢 Good / 🟡 Needs Work / 🔴 Critical Issues."""
+    if args.file:
+        with open(args.file) as f:
+            code = f.read()
+        print(f"\n🔍 Reviewing: {args.file}\n")
+    else:
+        code = args.code
+        print(f"\n🔍 Reviewing inline code snippet\n")
+
+    review = review_code(code, args.language)
+
+    print("=" * 60)
+    print("📋 CODE REVIEW")
+    print("=" * 60)
+    print(review)
 
 
-def review_code(code: str, language: str = "python") -> str:
-    llm = ChatOpenAI(model="gpt-4o", temperature=0)
-    messages = [
-        SystemMessage(content=SYSTEM_PROMPT),
-        HumanMessage(content=f"Review this {language} code:\n\n```{language}\n{code}\n```"),
-    ]
-    response = llm.invoke(messages)
-    return response.content
-
-
-def main():
-    parser = argparse.ArgumentParser(description="Code Review Agent")
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--file", help="Path to file to review")
+if __name__ == "__main__":
+    main()

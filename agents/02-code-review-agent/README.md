@@ -1,16 +1,15 @@
-# Code Review Agent
-
-An AI agent that reviews code for bugs, security issues, performance problems, and style violations.
-
-**Framework**: LangChain  
-**LLM**: GPT-4o  
-
-## Setup
-
 ```bash
-pip install -r requirements.txt
-cp .env.example .env
+# Review a file
+python agent.py --file path/to/your/code.py
+
+# Review inline code
+python agent.py --code "def divide(a, b): return a / b"
+
+# Review non-Python code
+python agent.py --file app.js --language javascript
 ```
 
-## Run
+## Sample Output
 
+```
+🔍 Reviewing: example.py

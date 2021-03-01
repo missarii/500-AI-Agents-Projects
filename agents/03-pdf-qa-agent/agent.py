@@ -1,26 +1,27 @@
-"""
-PDF Q&A Agent using LlamaIndex.
-
-Loads a PDF, indexes it, and answers questions about its content.
-Maintains conversation history for follow-up questions.
-
-Usage:
-    python agent.py --pdf path/to/document.pdf
-    python agent.py --pdf report.pdf --question "What is the main finding?"
-"""
-
-import argparse
-import os
-
-from dotenv import load_dotenv
-from llama_index.core import SimpleDirectoryReader, VectorStoreIndex
-from llama_index.core.memory import ChatMemoryBuffer
-from llama_index.llms.openai import OpenAI
-
-load_dotenv()
+    index = VectorStoreIndex.from_documents(docs)
+    print(f"✅ Indexed {len(docs)} document chunk(s)")
+    return index
 
 
-def build_index(pdf_path: str) -> VectorStoreIndex:
-    print(f"📄 Loading and indexing {pdf_path}...")
-    reader = SimpleDirectoryReader(input_files=[pdf_path])
-    docs = reader.load_data()
+def interactive_qa(index: VectorStoreIndex):
+    llm = OpenAI(model="gpt-4o-mini", temperature=0)
+    memory = ChatMemoryBuffer.from_defaults(token_limit=4096)
+    chat_engine = index.as_chat_engine(
+        chat_mode="context",
+        llm=llm,
+        memory=memory,
+        verbose=False,
+    )
+
+    print("\n💬 PDF Q&A Agent ready. Type 'quit' to exit.\n")
+    while True:
+        question = input("You: ").strip()
+        if question.lower() in ("quit", "exit", "q"):
+            break
+        if not question:
+            continue
+        response = chat_engine.chat(question)
+        print(f"\nAgent: {response.response}\n")
+
+
+def single_question(index: VectorStoreIndex, question: str):

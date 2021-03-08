@@ -1,0 +1,6 @@
+title: sql-query-agent
+description: Answers natural language questions about SQL databases by generating and executing queries
+author: ashishpatel26
+language: python
+framework: langchain
+tags: [sql, database, natural-language, data-analysis]

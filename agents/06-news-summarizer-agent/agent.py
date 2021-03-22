@@ -1,25 +1,25 @@
-        # Return mock data if no API key
-        return [
-            {"title": f"Major development in {topic}", "description": f"Researchers announce breakthrough in {topic} field.", "url": "https://example.com/1", "source": {"name": "Tech News"}},
-            {"title": f"{topic.title()} industry sees rapid growth", "description": f"New report shows {topic} adoption up 40% year-over-year.", "url": "https://example.com/2", "source": {"name": "Business Daily"}},
-            {"title": f"Experts weigh in on {topic} challenges", "description": f"Leading experts discuss obstacles facing the {topic} space.", "url": "https://example.com/3", "source": {"name": "Science Weekly"}},
-        ]
 
-    url = f"https://newsapi.org/v2/everything?q={topic}&language=en&pageSize={count}&sortBy=publishedAt&apiKey={NEWS_API_KEY}"
-    response = requests.get(url, timeout=10)
-    data = response.json()
-    return data.get("articles", [])
+    response = llm.invoke(messages)
+    return response.content
 
 
-def summarize_news(topic: str, articles: list[dict]) -> str:
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+def main():
+    parser = argparse.ArgumentParser(description="News Summarizer Agent")
+    parser.add_argument("--topic", default="artificial intelligence", help="News topic to search")
+    parser.add_argument("--count", type=int, default=5, help="Number of articles to fetch")
+    args = parser.parse_args()
 
-    articles_text = "\n\n".join(
-        f"Title: {a['title']}\nSource: {a.get('source', {}).get('name', 'Unknown')}\nSummary: {a.get('description', 'N/A')}"
-        for a in articles[:5]
-    )
+    print(f"\n📰 Fetching news about: {args.topic}\n")
+    articles = fetch_news(args.topic, args.count)
+    print(f"✅ Found {len(articles)} articles")
 
-    messages = [
-        SystemMessage(content="You are a news analyst. Create a structured news briefing with: 1) Top Story, 2) Key Themes (3 bullet points), 3) What to Watch, 4) Quick Headlines list."),
-        HumanMessage(content=f"Topic: {topic}\n\nArticles:\n{articles_text}"),
-    ]
+    summary = summarize_news(args.topic, articles)
+
+    print("\n" + "=" * 60)
+    print(f"📋 NEWS BRIEFING: {args.topic.upper()}")
+    print("=" * 60)
+    print(summary)
+
+
+if __name__ == "__main__":
+    main()

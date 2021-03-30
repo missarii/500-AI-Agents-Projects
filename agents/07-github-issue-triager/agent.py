@@ -1,30 +1,30 @@
-"""
-GitHub Issue Triager using LangGraph.
+  "assignee_type": "frontend|backend|devops|documentation|security|any",
+  "needs_more_info": true/false,
+  "triage_notes": "2-3 sentences of triager notes"
+}
+Return only valid JSON, no markdown."""
 
-Analyzes a GitHub issue and produces: severity label, category,
-reproduction steps summary, and suggested assignee type.
 
-Usage:
-    python agent.py --title "Login fails on mobile Safari" --body "When I try..."
-    python agent.py --issue-url https://github.com/owner/repo/issues/123
-"""
+def parse_json_response(text: str) -> dict:
+    cleaned = text.strip()
+    if cleaned.startswith("```"):
+        cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned)
+        cleaned = re.sub(r"\s*```$", "", cleaned)
+    match = re.search(r"\{.*\}", cleaned, re.DOTALL)
+    if match:
+        cleaned = match.group(0)
+    return json.loads(cleaned)
 
-import argparse
-import os
-import json
-import re
 
-from dotenv import load_dotenv
-from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_openai import ChatOpenAI
+def triage_issue(title: str, body: str, labels: list[str] = None) -> dict:
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
-load_dotenv()
+    issue_text = f"Title: {title}\n\nBody:\n{body}"
+    if labels:
+        issue_text += f"\n\nExisting labels: {', '.join(labels)}"
 
-TRIAGE_PROMPT = """You are a GitHub issue triager. Analyze the issue and return a JSON object with:
-{
-  "severity": "critical|high|medium|low",
-  "category": "bug|feature|documentation|question|performance|security",
-  "priority_score": 1-10,
-  "labels": ["list", "of", "suggested", "labels"],
-  "summary": "one sentence summary",
-  "reproduction_clear": true/false,
+    messages = [
+        SystemMessage(content=TRIAGE_PROMPT),
+        HumanMessage(content=issue_text),
+    ]
+

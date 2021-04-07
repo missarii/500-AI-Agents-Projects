@@ -1,35 +1,36 @@
-"""
-Data Analysis Agent using LangChain + pandas.
+        rows.append({
+            "date": d.isoformat(),
+            "product": random.choice(products),
+            "region": random.choice(regions),
+            "quantity": random.randint(1, 20),
+            "unit_price": round(random.uniform(50, 2000), 2),
+            "revenue": 0,
+        })
 
-Loads a CSV/Excel file and answers analytical questions about it using
-natural language. The agent generates Python/pandas code to answer questions.
-
-Usage:
-    python agent.py --file data.csv
-    python agent.py --file sales.xlsx --question "What is the monthly revenue trend?"
-"""
-
-import argparse
-import os
-
-import pandas as pd
-from dotenv import load_dotenv
-from langchain_experimental.agents import create_pandas_dataframe_agent
-from langchain_openai import ChatOpenAI
-
-load_dotenv()
+    df = pd.DataFrame(rows)
+    df["revenue"] = df["quantity"] * df["unit_price"]
+    df.to_csv(path, index=False)
+    return df
 
 
-def create_sample_data(path: str):
-    """Creates a sample sales dataset for demo."""
-    import random
-    from datetime import date, timedelta
+def main():
+    parser = argparse.ArgumentParser(description="Data Analysis Agent")
+    parser.add_argument("--file", default="sample_data.csv", help="CSV or Excel file to analyze")
+    parser.add_argument("--question", help="Single question (omit for interactive mode)")
+    parser.add_argument(
+        "--allow-dangerous-code",
+        action="store_true",
+        help="Required to let the pandas agent execute generated Python code locally",
+    )
+    args = parser.parse_args()
 
-    random.seed(42)
-    rows = []
-    products = ["Laptop", "Phone", "Tablet", "Monitor", "Keyboard"]
-    regions = ["North", "South", "East", "West"]
-    start = date(2024, 1, 1)
+    if args.file == "sample_data.csv" and not os.path.exists("sample_data.csv"):
+        print("🏗️  Creating sample sales dataset...")
+        df = create_sample_data("sample_data.csv")
+    else:
+        ext = os.path.splitext(args.file)[1].lower()
+        df = pd.read_excel(args.file) if ext in (".xlsx", ".xls") else pd.read_csv(args.file)
 
-    for i in range(200):
-        d = start + timedelta(days=random.randint(0, 364))
+    print(f"\n📊 Loaded: {args.file} ({len(df)} rows × {len(df.columns)} columns)")
+    print(f"📋 Columns: {', '.join(df.columns)}\n")
+

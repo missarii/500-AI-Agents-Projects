@@ -1,44 +1,43 @@
-"""
-Resume Parser Agent using LangChain.
+}
+Return only valid JSON."""
 
-Extracts structured information from resume text or PDF:
-contact info, skills, experience, education, and provides
-a candidate summary and fit score for a job description.
-
-Usage:
-    python agent.py --resume resume.txt
-    python agent.py --resume resume.pdf --job-desc "Senior Python Developer with 5+ years..."
-"""
-
-import argparse
-import json
-import os
-import re
-
-from dotenv import load_dotenv
-from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_openai import ChatOpenAI
-
-load_dotenv()
-
-PARSE_PROMPT = """Extract structured information from this resume and return JSON:
+FIT_PROMPT = """Given this candidate profile and job description, return JSON:
 {
-  "name": "full name",
-  "email": "email or null",
-  "phone": "phone or null",
-  "location": "city, country or null",
-  "linkedin": "URL or null",
-  "github": "URL or null",
-  "summary": "2-3 sentence professional summary",
-  "years_experience": number,
-  "current_title": "current/most recent job title",
-  "skills": {
-    "languages": ["Python", "JavaScript", ...],
-    "frameworks": ["Django", "React", ...],
-    "tools": ["Docker", "Git", ...],
-    "soft_skills": ["leadership", ...]
-  },
-  "experience": [{"title": "...", "company": "...", "duration": "...", "highlights": ["..."]}],
-  "education": [{"degree": "...", "institution": "...", "year": "..."}],
-  "certifications": ["..."],
-  "languages_spoken": ["English", ...]
+  "fit_score": 0-100,
+  "fit_label": "Excellent|Good|Fair|Poor",
+  "strengths": ["matching point 1", "matching point 2", ...],
+  "gaps": ["missing skill 1", ...],
+  "recommendation": "Hire|Consider|Pass",
+  "recommendation_reason": "2-3 sentence explanation"
+}
+Return only valid JSON."""
+
+
+def parse_json_response(text: str) -> dict:
+    cleaned = text.strip()
+    if cleaned.startswith("```"):
+        cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned)
+        cleaned = re.sub(r"\s*```$", "", cleaned)
+    match = re.search(r"\{.*\}", cleaned, re.DOTALL)
+    if match:
+        cleaned = match.group(0)
+    return json.loads(cleaned)
+
+
+def read_resume_text(path: str) -> str:
+    if path.endswith(".pdf"):
+        try:
+            import pypdf
+            with open(path, "rb") as f:
+                reader = pypdf.PdfReader(f)
+                return "\n".join(page.extract_text() for page in reader.pages)
+        except ImportError:
+            print("⚠️  pypdf not installed. Install with: pip install pypdf")
+            raise
+    with open(path) as f:
+        return f.read()
+
+
+def parse_resume(text: str) -> dict:
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    messages = [SystemMessage(content=PARSE_PROMPT), HumanMessage(content=text)]

@@ -1,38 +1,38 @@
+def main():
+    parser = argparse.ArgumentParser(description="Meeting Notes Agent")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--transcript", help="Path to transcript text file")
+    group.add_argument("--text", help="Transcript text directly")
+    parser.add_argument("--output", default="meeting_notes.md", help="Markdown output path")
+    args = parser.parse_args()
+
+    if args.transcript:
+        with open(args.transcript) as f:
+            transcript = f.read()
+        print(f"\n📝 Processing: {args.transcript}\n")
+    elif args.text:
+        transcript = args.text
+        print("\n📝 Processing transcript...\n")
+    else:
+        print("\n📝 Using sample meeting transcript\n")
+        transcript = SAMPLE_TRANSCRIPT
+
+    notes = generate_meeting_notes(transcript)
+    formatted = format_notes(notes)
+
+    print("=" * 60)
+    print(formatted)
+    print("=" * 60)
+
+    # Save to file
+    output_file = args.output
+    if os.path.exists(output_file) and args.output == "meeting_notes.md":
+        stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_file = f"meeting_notes_{stamp}.md"
+    with open(output_file, "w") as f:
+        f.write(formatted)
+    print(f"\n✅ Saved to: {output_file}")
 
 
-def generate_meeting_notes(transcript: str) -> dict:
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
-    messages = [
-        SystemMessage(content=NOTES_PROMPT),
-        HumanMessage(content=f"Meeting transcript:\n\n{transcript}"),
-    ]
-    response = llm.invoke(messages)
-    return parse_json_response(response.content)
-
-
-def format_notes(notes: dict) -> str:
-    lines = [
-        f"# {notes.get('meeting_title', 'Meeting Notes')}",
-        f"**Date:** {notes.get('date', date.today().isoformat())}  |  **Duration:** {notes.get('duration_estimate', 'N/A')}",
-        f"**Participants:** {', '.join(notes.get('participants', []))}",
-        "",
-        "## Summary",
-        notes.get("summary", ""),
-        "",
-        "## Key Decisions",
-        *[f"- {d}" for d in notes.get("key_decisions", [])],
-        "",
-        "## Action Items",
-    ]
-    for item in notes.get("action_items", []):
-        lines.append(f"- [ ] **{item.get('task', 'Task')}** — Owner: {item.get('owner', 'TBD')} | Due: {item.get('due', 'TBD')}")
-
-    if notes.get("blockers"):
-        lines += ["", "## Blockers", *[f"- {b}" for b in notes["blockers"]]]
-
-    if notes.get("next_meeting") and notes["next_meeting"] != "TBD":
-        lines += ["", f"**Next Meeting:** {notes['next_meeting']}"]
-
-    return "\n".join(lines)
-
-
+if __name__ == "__main__":
+    main()

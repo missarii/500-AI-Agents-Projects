@@ -1,20 +1,19 @@
-# Meeting Notes Agent
+# Your own transcript file
+python agent.py --transcript meeting_transcript.txt
 
-Converts meeting transcripts into structured notes with summary, action items, decisions, and follow-ups.
+# Inline text
+python agent.py --text "Alice: Let's ship by Friday. Bob: I need 2 more days for testing..."
 
-**Framework**: LangChain  
-**LLM**: GPT-4o-mini  
-
-## Setup
-
-```bash
-pip install -r requirements.txt
-cp .env.example .env
+# Custom output path
+python agent.py --transcript meeting_transcript.txt --output sprint_notes.md
 ```
 
-## Run
+## Output
 
-```bash
-# Use built-in sample transcript
-python agent.py
-
+Saves structured markdown to `meeting_notes.md` by default. If that file already exists,
+the agent writes a timestamped file instead. The output includes:
+- Executive summary
+- Key decisions
+- Action items with owners and due dates
+- Blockers
+- Next meeting time

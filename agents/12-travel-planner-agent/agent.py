@@ -1,36 +1,35 @@
-        goal=f"Create a detailed {days}-day itinerary for {destination}",
-        backstory="Luxury travel consultant with 15 years of experience crafting personalized itineraries.",
-        llm=llm,
+transportation. Flag if budget is tight and suggest adjustments.""",
+        agent=budget_analyst,
+        expected_output="Itemized budget breakdown with daily averages and money-saving tips",
+        context=[research_task, planning_task],
+    )
+
+    crew = Crew(
+        agents=[researcher, planner, budget_analyst],
+        tasks=[research_task, planning_task, budget_task],
+        process=Process.sequential,
         verbose=False,
     )
 
-    budget_analyst = Agent(
-        role="Travel Budget Analyst",
-        goal=f"Estimate realistic costs for the trip within ${budget} budget",
-        backstory="Financial travel advisor who helps travelers maximize experiences within budget.",
-        llm=llm,
-        verbose=False,
-    )
+    return str(crew.kickoff())
 
-    research_task = Task(
-        description=f"""Research {destination} for a {days}-day trip.
-Cover: best time to visit, neighborhoods to stay in, must-see attractions,
-local food scene, transportation tips, and cultural customs to know.
-Traveler interests: {interests}""",
-        agent=researcher,
-        expected_output="Destination brief with key areas, attractions, food, and practical tips",
-    )
 
-    planning_task = Task(
-        description=f"""Create a {days}-day itinerary for {destination}.
-Budget: ${budget} total. Interests: {interests}.
-Include morning/afternoon/evening activities, specific restaurant recommendations,
-and travel time between locations. Make it achievable and enjoyable.""",
-        agent=planner,
-        expected_output=f"Day-by-day {days}-day itinerary with activities, meals, and timing",
-        context=[research_task],
-    )
+def main():
+    parser = argparse.ArgumentParser(description="Travel Planner Agent")
+    parser.add_argument("--destination", default="Tokyo, Japan", help="Travel destination")
+    parser.add_argument("--days", type=int, default=7, help="Number of days")
+    parser.add_argument("--budget", type=float, default=3000, help="Total budget in USD")
+    parser.add_argument("--interests", default="food, culture, history", help="Traveler interests")
+    args = parser.parse_args()
 
-    budget_task = Task(
-        description=f"""Provide a budget breakdown for the {days}-day {destination} trip.
-Total budget: ${budget}. Include: flights (estimate), accommodation, food, activities,
+    print(f"\n✈️  Planning {args.days}-day trip to {args.destination} (Budget: ${args.budget})\n")
+    itinerary = build_travel_crew(args.destination, args.days, args.budget, args.interests)
+
+    print("=" * 60)
+    print("🗺️  TRAVEL ITINERARY")
+    print("=" * 60)
+    print(itinerary)
+
+
+if __name__ == "__main__":
+    main()

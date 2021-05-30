@@ -1,40 +1,39 @@
-{state['retrieved_context']}
 
-Be friendly, concise, and solution-focused. If unsure, say so honestly."""),
-            *conversation,
-            HumanMessage(content=state["user_input"]),
-        ]
-        response = llm.invoke(messages)
-        response_text = response.content
+    if not texts:
+        raise ValueError(f"No .txt or .md files found in knowledge base directory: {kb_dir}")
 
-    return {"response": response_text, "messages": [AIMessage(content=response_text)]}
+    return texts
 
 
-def route_after_escalation_check(state: SupportState) -> Literal["generate", "generate"]:
-    return "generate"
+def main():
+    parser = argparse.ArgumentParser(description="Customer Support Agent")
+    parser.add_argument("--kb-dir", help="Directory containing .txt or .md support knowledge base files")
+    args = parser.parse_args()
+
+    retrieve_context.kb_texts = load_kb_texts(args.kb_dir)
+    if hasattr(retrieve_context, "vectorstore"):
+        delattr(retrieve_context, "vectorstore")
+
+    agent = build_graph()
+    state = {"messages": [], "user_input": "", "retrieved_context": "", "response": "", "escalate": False}
+
+    print("\n🎧 Customer Support Agent (CloudSync Pro)")
+    print("Type 'quit' to exit\n")
+
+    while True:
+        user_input = input("Customer: ").strip()
+        if user_input.lower() in ("quit", "exit", "q"):
+            break
+        if not user_input:
+            continue
+
+        state["user_input"] = user_input
+        state["messages"].append(HumanMessage(content=user_input))
+        state = agent.invoke(state)
+
+        escalation_indicator = " [ESCALATED]" if state.get("escalate") else ""
+        print(f"\nAgent{escalation_indicator}: {state['response']}\n")
 
 
-def build_graph():
-    graph = StateGraph(SupportState)
-    graph.add_node("retrieve", retrieve_context)
-    graph.add_node("check_escalation", check_escalation)
-    graph.add_node("generate", generate_response)
-    graph.set_entry_point("retrieve")
-    graph.add_edge("retrieve", "check_escalation")
-    graph.add_edge("check_escalation", "generate")
-    graph.add_edge("generate", END)
-    return graph.compile()
-
-
-def load_kb_texts(kb_dir: str | None) -> list[str]:
-    if not kb_dir:
-        return SAMPLE_KB
-
-    root = Path(kb_dir)
-    if not root.is_dir():
-        raise ValueError(f"Knowledge base directory does not exist: {kb_dir}")
-
-    texts = []
-    for path in sorted(root.rglob("*")):
-        if path.is_file() and path.suffix.lower() in {".txt", ".md"}:
-            texts.append(path.read_text(encoding="utf-8"))
+if __name__ == "__main__":
+    main()

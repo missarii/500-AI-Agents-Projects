@@ -1,32 +1,32 @@
+        else:
+            self.items[name] = {"price": price, "quantity": quantity}
 
-Output ONLY the complete test file content, ready to run with `pytest`."""
+    def remove_item(self, name: str):
+        if name not in self.items:
+            raise KeyError(f"Item '{name}' not in cart")
+        del self.items[name]
 
-SAMPLE_CODE = '''
-def calculate_discount(price: float, discount_percent: float) -> float:
-    """Calculate discounted price."""
-    if price < 0:
-        raise ValueError("Price cannot be negative")
-    if not 0 <= discount_percent <= 100:
-        raise ValueError("Discount must be between 0 and 100")
-    return price * (1 - discount_percent / 100)
-
-
-def find_longest_word(text: str) -> str:
-    """Find the longest word in a text string."""
-    if not text or not text.strip():
-        return ""
-    words = text.split()
-    return max(words, key=len)
+    def total(self) -> float:
+        return sum(item["price"] * item["quantity"] for item in self.items.values())
+'''
 
 
-class ShoppingCart:
-    def __init__(self):
-        self.items = {}
+def generate_tests(code: str, filename: str = "module") -> str:
+    llm = ChatOpenAI(model="gpt-4o", temperature=0)
+    messages = [
+        SystemMessage(content=TEST_PROMPT),
+        HumanMessage(content=f"Generate tests for this Python code (from `{filename}`):\n\n```python\n{code}\n```"),
+    ]
+    response = llm.invoke(messages)
+    return response.content
 
-    def add_item(self, name: str, price: float, quantity: int = 1):
-        if price < 0:
-            raise ValueError("Price cannot be negative")
-        if quantity < 1:
-            raise ValueError("Quantity must be at least 1")
-        if name in self.items:
-            self.items[name]["quantity"] += quantity
+
+def main():
+    parser = argparse.ArgumentParser(description="Unit Test Generator")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--file", help="Python file to generate tests for")
+    group.add_argument("--code", help="Inline code to generate tests for")
+    parser.add_argument("--output", help="Output file path (default: test_<name>.py)")
+    args = parser.parse_args()
+
+    if args.file:

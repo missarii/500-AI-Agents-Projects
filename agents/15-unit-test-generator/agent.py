@@ -1,32 +1,32 @@
-"""
-Unit Test Generator Agent.
 
-Analyzes Python code and generates comprehensive pytest test suites
-covering happy paths, edge cases, and error conditions.
+Output ONLY the complete test file content, ready to run with `pytest`."""
 
-Usage:
-    python agent.py --file path/to/module.py
-    python agent.py --code "def calculate_bmi(weight, height): return weight / height**2"
-"""
+SAMPLE_CODE = '''
+def calculate_discount(price: float, discount_percent: float) -> float:
+    """Calculate discounted price."""
+    if price < 0:
+        raise ValueError("Price cannot be negative")
+    if not 0 <= discount_percent <= 100:
+        raise ValueError("Discount must be between 0 and 100")
+    return price * (1 - discount_percent / 100)
 
-import argparse
-import os
 
-from dotenv import load_dotenv
-from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_openai import ChatOpenAI
+def find_longest_word(text: str) -> str:
+    """Find the longest word in a text string."""
+    if not text or not text.strip():
+        return ""
+    words = text.split()
+    return max(words, key=len)
 
-load_dotenv()
 
-TEST_PROMPT = """You are an expert Python test engineer. Generate a comprehensive pytest test suite for the provided code.
+class ShoppingCart:
+    def __init__(self):
+        self.items = {}
 
-Requirements:
-1. Use pytest fixtures where appropriate
-2. Test happy paths (normal expected inputs)
-3. Test edge cases (boundary values, empty inputs)
-4. Test error conditions (invalid inputs, exceptions)
-5. Use descriptive test names: `test_function_name_scenario`
-6. Add brief docstrings to each test
-7. Use `pytest.mark.parametrize` for repetitive tests
-8. Mock external dependencies (API calls, file I/O, DB)
-9. Aim for 90%+ code coverage
+    def add_item(self, name: str, price: float, quantity: int = 1):
+        if price < 0:
+            raise ValueError("Price cannot be negative")
+        if quantity < 1:
+            raise ValueError("Quantity must be at least 1")
+        if name in self.items:
+            self.items[name]["quantity"] += quantity

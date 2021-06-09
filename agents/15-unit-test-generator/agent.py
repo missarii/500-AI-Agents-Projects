@@ -1,32 +1,32 @@
-        else:
-            self.items[name] = {"price": price, "quantity": quantity}
+        with open(args.file) as f:
+            code = f.read()
+        module_name = os.path.splitext(os.path.basename(args.file))[0]
+        print(f"\n🧪 Generating tests for: {args.file}")
+    elif args.code:
+        code = args.code
+        module_name = "module"
+        print(f"\n🧪 Generating tests for inline code")
+    else:
+        code = SAMPLE_CODE
+        module_name = "shopping"
+        print(f"\n🧪 Generating tests for sample code")
 
-    def remove_item(self, name: str):
-        if name not in self.items:
-            raise KeyError(f"Item '{name}' not in cart")
-        del self.items[name]
+    tests = generate_tests(code, module_name)
 
-    def total(self) -> float:
-        return sum(item["price"] * item["quantity"] for item in self.items.values())
-'''
+    # Clean up markdown fences if present
+    if tests.startswith("```"):
+        lines = tests.split("\n")
+        tests = "\n".join(lines[1:-1] if lines[-1] == "```" else lines[1:])
 
+    output_file = args.output or f"test_{module_name}.py"
+    with open(output_file, "w") as f:
+        f.write(tests)
 
-def generate_tests(code: str, filename: str = "module") -> str:
-    llm = ChatOpenAI(model="gpt-4o", temperature=0)
-    messages = [
-        SystemMessage(content=TEST_PROMPT),
-        HumanMessage(content=f"Generate tests for this Python code (from `{filename}`):\n\n```python\n{code}\n```"),
-    ]
-    response = llm.invoke(messages)
-    return response.content
+    print(f"\n✅ Tests saved to: {output_file}")
+    print(f"\nRun with: pytest {output_file} -v")
+    print("\n" + "=" * 60)
+    print(tests[:500] + "..." if len(tests) > 500 else tests)
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Unit Test Generator")
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument("--file", help="Python file to generate tests for")
-    group.add_argument("--code", help="Inline code to generate tests for")
-    parser.add_argument("--output", help="Output file path (default: test_<name>.py)")
-    args = parser.parse_args()
-
-    if args.file:
+if __name__ == "__main__":
+    main()

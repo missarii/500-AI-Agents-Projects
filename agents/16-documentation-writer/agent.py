@@ -1,49 +1,49 @@
-"""
-Documentation Writer Agent.
+1. Module title and one-line description
+2. Features list (bullet points)
+3. Installation section
+4. Quick Start with working code example
+5. API Reference (each public function/class with parameters, return type, example)
+6. Configuration (environment variables if any)
+7. Error Handling section
 
-Generates comprehensive documentation for Python modules:
-README, API reference, docstrings, and usage examples.
+Write in clear, developer-friendly markdown. Be specific and concrete."""
 
-Usage:
-    python agent.py --file path/to/module.py
-    python agent.py --file src/utils.py --format readme
-"""
+DOCSTRING_PROMPT = """Add comprehensive Google-style docstrings to every function and class that lacks them.
 
-import argparse
-import ast
-import os
+Format:
+```
+def function(param: type) -> return_type:
+    \"\"\"One-line summary.
 
-from dotenv import load_dotenv
-from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_openai import ChatOpenAI
+    Args:
+        param: Description of parameter.
 
-load_dotenv()
+    Returns:
+        Description of return value.
 
+    Raises:
+        ErrorType: When this error is raised.
 
-def extract_structure(code: str) -> str:
-    """Extract functions, classes, and their signatures from Python code."""
-    try:
-        tree = ast.parse(code)
-        structure = []
+    Example:
+        >>> function(value)
+        expected_output
+    \"\"\"
+```
 
-        for node in tree.body:
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                args = [a.arg for a in node.args.args]
-                prefix = "async def" if isinstance(node, ast.AsyncFunctionDef) else "def"
-                structure.append(f"{prefix} {node.name}({', '.join(args)})")
-            elif isinstance(node, ast.ClassDef):
-                structure.append(f"class {node.name}:")
-                for item in node.body:
-                    if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                        args = [a.arg for a in item.args.args]
-                        prefix = "async def" if isinstance(item, ast.AsyncFunctionDef) else "def"
-                        structure.append(f"  {prefix} {item.name}({', '.join(args)})")
-
-        return "\n".join(structure)
-    except Exception:
-        return "Could not parse structure"
+Return the complete updated Python file with docstrings added."""
 
 
-README_PROMPT = """You are a technical documentation expert. Generate a complete, professional README.md for this Python module.
+def generate_readme(code: str, filename: str) -> str:
+    llm = ChatOpenAI(model="gpt-4o", temperature=0)
+    structure = extract_structure(code)
+    messages = [
+        SystemMessage(content=README_PROMPT),
+        HumanMessage(content=f"File: {filename}\n\nCode structure:\n{structure}\n\nFull code:\n```python\n{code[:3000]}\n```"),
+    ]
+    return llm.invoke(messages).content
 
-Include:
+
+def add_docstrings(code: str, filename: str) -> str:
+    llm = ChatOpenAI(model="gpt-4o", temperature=0)
+    messages = [
+        SystemMessage(content=DOCSTRING_PROMPT),

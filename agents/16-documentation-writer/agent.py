@@ -1,49 +1,48 @@
-1. Module title and one-line description
-2. Features list (bullet points)
-3. Installation section
-4. Quick Start with working code example
-5. API Reference (each public function/class with parameters, return type, example)
-6. Configuration (environment variables if any)
-7. Error Handling section
-
-Write in clear, developer-friendly markdown. Be specific and concrete."""
-
-DOCSTRING_PROMPT = """Add comprehensive Google-style docstrings to every function and class that lacks them.
-
-Format:
-```
-def function(param: type) -> return_type:
-    \"\"\"One-line summary.
-
-    Args:
-        param: Description of parameter.
-
-    Returns:
-        Description of return value.
-
-    Raises:
-        ErrorType: When this error is raised.
-
-    Example:
-        >>> function(value)
-        expected_output
-    \"\"\"
-```
-
-Return the complete updated Python file with docstrings added."""
-
-
-def generate_readme(code: str, filename: str) -> str:
-    llm = ChatOpenAI(model="gpt-4o", temperature=0)
-    structure = extract_structure(code)
-    messages = [
-        SystemMessage(content=README_PROMPT),
-        HumanMessage(content=f"File: {filename}\n\nCode structure:\n{structure}\n\nFull code:\n```python\n{code[:3000]}\n```"),
+        HumanMessage(content=f"Add docstrings to this Python file ({filename}):\n\n```python\n{code}\n```"),
     ]
-    return llm.invoke(messages).content
+    result = llm.invoke(messages).content
+    # Clean markdown fences
+    if "```python" in result:
+        result = result.split("```python")[1].split("```")[0].strip()
+    return result
 
 
-def add_docstrings(code: str, filename: str) -> str:
-    llm = ChatOpenAI(model="gpt-4o", temperature=0)
-    messages = [
-        SystemMessage(content=DOCSTRING_PROMPT),
+SAMPLE_CODE = r'''
+import hashlib
+import re
+from datetime import datetime
+
+
+def validate_email(email: str) -> bool:
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return bool(re.match(pattern, email))
+
+
+def hash_password(password: str, salt: str = "") -> str:
+    combined = f"{password}{salt}"
+    return hashlib.sha256(combined.encode()).hexdigest()
+
+
+def parse_date(date_string: str) -> datetime:
+    formats = ["%Y-%m-%d", "%d/%m/%Y", "%m-%d-%Y", "%Y%m%d"]
+    for fmt in formats:
+        try:
+            return datetime.strptime(date_string, fmt)
+        except ValueError:
+            continue
+    raise ValueError(f"Unable to parse date: {date_string}")
+
+
+class UserValidator:
+    MIN_PASSWORD_LENGTH = 8
+
+    def validate_username(self, username: str) -> tuple[bool, str]:
+        if len(username) < 3:
+            return False, "Username too short"
+        if not re.match(r'^[a-zA-Z0-9_]+$', username):
+            return False, "Only letters, numbers, underscores allowed"
+        return True, ""
+
+    def validate_password(self, password: str) -> tuple[bool, str]:
+        if len(password) < self.MIN_PASSWORD_LENGTH:
+            return False, f"Password must be at least {self.MIN_PASSWORD_LENGTH} characters"

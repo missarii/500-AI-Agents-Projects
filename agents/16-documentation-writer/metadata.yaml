@@ -1,0 +1,6 @@
+title: documentation-writer-agent
+description: Generates README and docstrings for Python modules
+author: ashishpatel26
+language: python
+framework: langchain
+tags: [documentation, docstrings, readme, software-development]

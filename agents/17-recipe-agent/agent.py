@@ -1,31 +1,31 @@
-"""
-Recipe Recommendation Agent using Agno-style single agent.
+      "cook_time": "X minutes",
+      "servings": N,
+      "ingredients_needed": ["ingredient (amount)"],
+      "missing_ingredients": ["optional additions"],
+      "instructions": ["Step 1: ...", "Step 2: ..."],
+      "nutrition_per_serving": {"calories": N, "protein": "Xg", "carbs": "Xg", "fat": "Xg"},
+      "tips": "Chef's tip"
+    }
+  ],
+  "recommended": "Recipe Name (best match)"
+}
+Return only valid JSON."""
 
-Suggests recipes based on available ingredients, dietary restrictions,
-and time constraints.
 
-Usage:
-    python agent.py --ingredients "chicken, garlic, lemon, rosemary"
-    python agent.py --ingredients "tofu, broccoli, soy sauce" --diet vegan --time 20
-"""
+def parse_json_response(text: str) -> dict:
+    cleaned = text.strip()
+    if cleaned.startswith("```"):
+        cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned)
+        cleaned = re.sub(r"\s*```$", "", cleaned)
+    match = re.search(r"\{.*\}", cleaned, re.DOTALL)
+    if match:
+        cleaned = match.group(0)
+    return json.loads(cleaned)
 
-import argparse
-import json
-import os
-import re
 
-from dotenv import load_dotenv
-from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_openai import ChatOpenAI
+def get_recipes(ingredients: list[str], diet: str, time_limit: int, servings: int) -> dict:
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.5)
 
-load_dotenv()
-
-RECIPE_PROMPT = """You are a professional chef and nutritionist. Given available ingredients and constraints,
-suggest 3 recipes. Return JSON:
-{
-  "recipes": [
-    {
-      "name": "Recipe Name",
-      "cuisine": "Italian/Asian/etc",
-      "difficulty": "Easy/Medium/Hard",
-      "prep_time": "X minutes",
+    constraints = []
+    if diet:
+        constraints.append(f"Dietary restriction: {diet}")

@@ -1,31 +1,32 @@
-      "cook_time": "X minutes",
-      "servings": N,
-      "ingredients_needed": ["ingredient (amount)"],
-      "missing_ingredients": ["optional additions"],
-      "instructions": ["Step 1: ...", "Step 2: ..."],
-      "nutrition_per_serving": {"calories": N, "protein": "Xg", "carbs": "Xg", "fat": "Xg"},
-      "tips": "Chef's tip"
-    }
-  ],
-  "recommended": "Recipe Name (best match)"
-}
-Return only valid JSON."""
+    if time_limit:
+        constraints.append(f"Max total time: {time_limit} minutes")
+    if servings:
+        constraints.append(f"Servings needed: {servings}")
+
+    messages = [
+        SystemMessage(content=RECIPE_PROMPT),
+        HumanMessage(content=f"Available ingredients: {', '.join(ingredients)}\n\nConstraints:\n{chr(10).join(constraints) if constraints else 'None'}"),
+    ]
+
+    response = llm.invoke(messages)
+    return parse_json_response(response.content)
 
 
-def parse_json_response(text: str) -> dict:
-    cleaned = text.strip()
-    if cleaned.startswith("```"):
-        cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned)
-        cleaned = re.sub(r"\s*```$", "", cleaned)
-    match = re.search(r"\{.*\}", cleaned, re.DOTALL)
-    if match:
-        cleaned = match.group(0)
-    return json.loads(cleaned)
+def display_recipe(recipe: dict):
+    print(f"\n🍽️  {recipe.get('name', 'Recipe')} ({recipe.get('cuisine', 'N/A')})")
+    print(f"⏱️  Prep: {recipe.get('prep_time', 'N/A')} | Cook: {recipe.get('cook_time', 'N/A')} | Difficulty: {recipe.get('difficulty', 'N/A')}")
+    print(f"👥 Serves: {recipe.get('servings', 'N/A')}")
+    print(f"\n📝 Ingredients:")
+    for ing in recipe.get("ingredients_needed", []):
+        print(f"  • {ing}")
+    if recipe.get("missing_ingredients"):
+        print(f"\n➕ Optional additions: {', '.join(recipe['missing_ingredients'])}")
+    print(f"\n👨‍🍳 Instructions:")
+    for i, step in enumerate(recipe.get("instructions", []), 1):
+        print(f"  {i}. {step}")
+    n = recipe.get("nutrition_per_serving", {})
+    if n:
+        print(f"\n🥗 Nutrition: {n.get('calories', '?')} cal | Protein: {n.get('protein', '?')} | Carbs: {n.get('carbs', '?')} | Fat: {n.get('fat', '?')}")
+    if recipe.get("tips"):
+        print(f"\n💡 Chef's tip: {recipe['tips']}")
 
-
-def get_recipes(ingredients: list[str], diet: str, time_limit: int, servings: int) -> dict:
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.5)
-
-    constraints = []
-    if diet:
-        constraints.append(f"Dietary restriction: {diet}")

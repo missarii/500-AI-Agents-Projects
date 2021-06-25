@@ -1,32 +1,31 @@
-    if time_limit:
-        constraints.append(f"Max total time: {time_limit} minutes")
-    if servings:
-        constraints.append(f"Servings needed: {servings}")
 
-    messages = [
-        SystemMessage(content=RECIPE_PROMPT),
-        HumanMessage(content=f"Available ingredients: {', '.join(ingredients)}\n\nConstraints:\n{chr(10).join(constraints) if constraints else 'None'}"),
-    ]
+def main():
+    parser = argparse.ArgumentParser(description="Recipe Recommendation Agent")
+    parser.add_argument("--ingredients", default="chicken breast, garlic, lemon, olive oil, rosemary, potatoes", help="Comma-separated ingredients")
+    parser.add_argument("--diet", default="", help="Dietary restriction (vegan, vegetarian, gluten-free, keto, etc.)")
+    parser.add_argument("--time", type=int, default=0, help="Max cooking time in minutes")
+    parser.add_argument("--servings", type=int, default=2, help="Number of servings")
+    args = parser.parse_args()
 
-    response = llm.invoke(messages)
-    return parse_json_response(response.content)
+    ingredients = [i.strip() for i in args.ingredients.split(",")]
+    print(f"\n🥘 Finding recipes with: {', '.join(ingredients)}")
+    if args.diet:
+        print(f"🥗 Diet: {args.diet}")
+    if args.time:
+        print(f"⏱️  Max time: {args.time} minutes")
+
+    result = get_recipes(ingredients, args.diet, args.time, args.servings)
+
+    print("\n" + "=" * 60)
+    recipes = result.get("recipes", [])
+    recommended = result.get("recommended") or (recipes[0].get("name", "N/A") if recipes else "N/A")
+    print("✅ RECOMMENDED:", recommended)
+    print("=" * 60)
+
+    for recipe in recipes:
+        display_recipe(recipe)
+        print("\n" + "-" * 40)
 
 
-def display_recipe(recipe: dict):
-    print(f"\n🍽️  {recipe.get('name', 'Recipe')} ({recipe.get('cuisine', 'N/A')})")
-    print(f"⏱️  Prep: {recipe.get('prep_time', 'N/A')} | Cook: {recipe.get('cook_time', 'N/A')} | Difficulty: {recipe.get('difficulty', 'N/A')}")
-    print(f"👥 Serves: {recipe.get('servings', 'N/A')}")
-    print(f"\n📝 Ingredients:")
-    for ing in recipe.get("ingredients_needed", []):
-        print(f"  • {ing}")
-    if recipe.get("missing_ingredients"):
-        print(f"\n➕ Optional additions: {', '.join(recipe['missing_ingredients'])}")
-    print(f"\n👨‍🍳 Instructions:")
-    for i, step in enumerate(recipe.get("instructions", []), 1):
-        print(f"  {i}. {step}")
-    n = recipe.get("nutrition_per_serving", {})
-    if n:
-        print(f"\n🥗 Nutrition: {n.get('calories', '?')} cal | Protein: {n.get('protein', '?')} | Carbs: {n.get('carbs', '?')} | Fat: {n.get('fat', '?')}")
-    if recipe.get("tips"):
-        print(f"\n💡 Chef's tip: {recipe['tips']}")
-
+if __name__ == "__main__":
+    main()

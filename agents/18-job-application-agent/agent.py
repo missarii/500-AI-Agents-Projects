@@ -1,30 +1,30 @@
-"""
-Job Application Agent using CrewAI.
+- Strong communication skills
 
-Analyzes a job description and a candidate profile, then generates:
-- Tailored cover letter
-- Resume bullet points to highlight
-- Interview preparation questions
-
-Usage:
-    python agent.py --job-desc "Senior Python Engineer at Stripe..." --candidate "7 years Python, FastAPI..."
+Responsibilities:
+- Design and build high-performance APIs handling millions of requests/day
+- Lead technical design reviews
+- Mentor junior engineers
+- Collaborate with product managers on technical feasibility
 """
 
-import argparse
-import os
+SAMPLE_CANDIDATE = """
+Jane Doe — 7 years Python experience
+Current role: Senior Software Engineer at DataCorp
+Skills: Python, FastAPI, Django, PostgreSQL, Redis, Docker, Kubernetes, AWS
+Achievements:
+- Built API platform handling 5M requests/day
+- Led team of 4 engineers
+- Reduced API latency by 40%
+- Mentored 3 junior engineers
+Education: BS Computer Science, UC Berkeley
+"""
 
-from crewai import Agent, Crew, Process, Task
-from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
 
-load_dotenv()
+def run_job_application_crew(job_desc: str, candidate_profile: str) -> str:
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.4)
 
-SAMPLE_JOB = """Senior Python Engineer at Stripe
-We're looking for a Senior Python Engineer to join our API Platform team.
-
-Requirements:
-- 5+ years Python development
-- Experience with distributed systems
-- Strong understanding of REST APIs and microservices
-- Experience with PostgreSQL, Redis
-- Kubernetes experience preferred
+    analyst = Agent(
+        role="Job Requirements Analyst",
+        goal="Analyze the job description and identify key requirements, values, and culture signals",
+        backstory="Ex-hiring manager at FAANG with 10 years recruiting experience. Expert at decoding job descriptions.",
+        llm=llm,

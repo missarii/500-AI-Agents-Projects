@@ -1,29 +1,29 @@
-    competitor_analyses: dict[str, str]
-    final_report: str
+    llm = ChatOpenAI(model="gpt-4o", temperature=0)
 
+    analyses_text = "\n\n".join(
+        f"**{name}:**\n{analysis}"
+        for name, analysis in state["competitor_analyses"].items()
+    )
 
-def identify_competitors(state: AnalysisState) -> AnalysisState:
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
     response = llm.invoke([
-        SystemMessage(content="You are a market research analyst. List exactly 5 main competitors as a comma-separated list. Nothing else."),
-        HumanMessage(content=f"Company: {state['company']}\nIndustry: {state['industry']}\n\nList 5 main competitors:"),
+        SystemMessage(content="""You are a strategic consultant. Create a competitive analysis report with:
+1. Executive Summary (3 sentences)
+2. Competitive Landscape Table (company, strength, weakness, price)
+3. Market Gaps & Opportunities (3 bullet points)
+4. Strategic Recommendations for {company} (5 action items)
+5. Threat Assessment (High/Medium/Low for each competitor)""".replace("{company}", state["company"])),
+        HumanMessage(content=f"Company: {state['company']}\nIndustry: {state['industry']}\n\nCompetitor analyses:\n{analyses_text}"),
     ])
-    competitors = [c.strip() for c in response.content.split(",")][:5]
-    return {"competitors": competitors, "messages": [response]}
+
+    return {"final_report": response.content, "messages": [response]}
 
 
-def analyze_competitor(state: AnalysisState) -> AnalysisState:
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
-    analyses = {}
-
-    for competitor in state["competitors"]:
-        response = llm.invoke([
-            SystemMessage(content="Provide a concise competitive analysis in 100 words covering: main products, strengths (2), weaknesses (2), pricing model, target market."),
-            HumanMessage(content=f"Analyze {competitor} vs {state['company']} in {state['industry']}:"),
-        ])
-        analyses[competitor] = response.content
-
-    return {"competitor_analyses": analyses}
-
-
-def generate_report(state: AnalysisState) -> AnalysisState:
+def build_graph():
+    graph = StateGraph(AnalysisState)
+    graph.add_node("identify", identify_competitors)
+    graph.add_node("analyze", analyze_competitor)
+    graph.add_node("report", generate_report)
+    graph.set_entry_point("identify")
+    graph.add_edge("identify", "analyze")
+    graph.add_edge("analyze", "report")
+    graph.add_edge("report", END)

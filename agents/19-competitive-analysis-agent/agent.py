@@ -1,29 +1,30 @@
-    llm = ChatOpenAI(model="gpt-4o", temperature=0)
-
-    analyses_text = "\n\n".join(
-        f"**{name}:**\n{analysis}"
-        for name, analysis in state["competitor_analyses"].items()
-    )
-
-    response = llm.invoke([
-        SystemMessage(content="""You are a strategic consultant. Create a competitive analysis report with:
-1. Executive Summary (3 sentences)
-2. Competitive Landscape Table (company, strength, weakness, price)
-3. Market Gaps & Opportunities (3 bullet points)
-4. Strategic Recommendations for {company} (5 action items)
-5. Threat Assessment (High/Medium/Low for each competitor)""".replace("{company}", state["company"])),
-        HumanMessage(content=f"Company: {state['company']}\nIndustry: {state['industry']}\n\nCompetitor analyses:\n{analyses_text}"),
-    ])
-
-    return {"final_report": response.content, "messages": [response]}
+    return graph.compile()
 
 
-def build_graph():
-    graph = StateGraph(AnalysisState)
-    graph.add_node("identify", identify_competitors)
-    graph.add_node("analyze", analyze_competitor)
-    graph.add_node("report", generate_report)
-    graph.set_entry_point("identify")
-    graph.add_edge("identify", "analyze")
-    graph.add_edge("analyze", "report")
-    graph.add_edge("report", END)
+def main():
+    parser = argparse.ArgumentParser(description="Competitive Analysis Agent")
+    parser.add_argument("--company", default="Notion", help="Company to analyze")
+    parser.add_argument("--industry", default="productivity and collaboration software", help="Industry")
+    args = parser.parse_args()
+
+    print(f"\n🔍 Analyzing competitive landscape for {args.company}...\n")
+
+    agent = build_graph()
+    result = agent.invoke({
+        "company": args.company,
+        "industry": args.industry,
+        "messages": [],
+        "competitors": [],
+        "competitor_analyses": {},
+        "final_report": "",
+    })
+
+    print(f"🏢 Competitors identified: {', '.join(result['competitors'])}\n")
+    print("=" * 60)
+    print("📊 COMPETITIVE ANALYSIS REPORT")
+    print("=" * 60)
+    print(result["final_report"])
+
+
+if __name__ == "__main__":
+    main()

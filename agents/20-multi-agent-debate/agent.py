@@ -1,33 +1,33 @@
-Make compelling, evidence-based arguments. Be direct and persuasive.
-Keep response under 150 words. Round {round_num}."""
+CON arguments ({con_agent.name}):
+{con_args}
 
-        if opponent_last_arg:
-            user_msg = f"Topic: {topic}\n\nYour opponent just said: '{opponent_last_arg}'\n\nRespond and advance your argument:"
-        else:
-            user_msg = f"Topic: {topic}\n\nMake your opening argument for {self.position.upper()}:"
-
-        response = self.llm.invoke([
-            SystemMessage(content=system_msg),
-            HumanMessage(content=user_msg),
+Provide your verdict:"""),
         ])
-        argument = response.content
-        self.arguments.append(argument)
-        return argument
+        return {"verdict": response.content}
 
 
-class DebateJudge:
-    def __init__(self):
-        self.llm = ChatOpenAI(model="gpt-4o", temperature=0)
+def run_debate(topic: str, rounds: int = 2) -> None:
+    pro = DebateAgent(
+        name="Dr. Alex Chen",
+        position="FOR",
+        expertise="technology economist and AI researcher"
+    )
+    con = DebateAgent(
+        name="Prof. Sarah Martinez",
+        position="AGAINST",
+        expertise="labor economist and social policy expert"
+    )
+    judge = DebateJudge()
 
-    def evaluate(self, topic: str, pro_agent: DebateAgent, con_agent: DebateAgent) -> dict:
-        pro_args = "\n\n".join(f"Round {i+1}: {a}" for i, a in enumerate(pro_agent.arguments))
-        con_args = "\n\n".join(f"Round {i+1}: {a}" for i, a in enumerate(con_agent.arguments))
+    print(f"\n{'='*60}")
+    print(f"⚖️  DEBATE: {topic}")
+    print(f"{'='*60}")
+    print(f"🟢 FOR: {pro.name} ({pro.expertise})")
+    print(f"🔴 AGAINST: {con.name} ({con.expertise})")
+    print(f"🏛️  Rounds: {rounds}")
+    print("=" * 60)
 
-        response = self.llm.invoke([
-            SystemMessage(content="""You are an impartial debate judge. Evaluate both sides fairly.
-Return a structured verdict with: winner, score (out of 10 each), strongest argument per side, key insights, and balanced synthesis conclusion."""),
-            HumanMessage(content=f"""Topic: "{topic}"
+    last_con_arg = ""
+    last_pro_arg = ""
 
-PRO arguments ({pro_agent.name}):
-{pro_args}
-
+    for round_num in range(1, rounds + 1):

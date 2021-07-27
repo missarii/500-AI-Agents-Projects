@@ -1,33 +1,32 @@
-CON arguments ({con_agent.name}):
-{con_args}
+        print(f"\n--- Round {round_num} ---\n")
 
-Provide your verdict:"""),
-        ])
-        return {"verdict": response.content}
+        pro_arg = pro.make_argument(topic, round_num, last_con_arg)
+        print(f"🟢 {pro.name} (FOR):")
+        print(pro_arg)
 
+        con_arg = con.make_argument(topic, round_num, pro_arg)
+        print(f"\n🔴 {con.name} (AGAINST):")
+        print(con_arg)
 
-def run_debate(topic: str, rounds: int = 2) -> None:
-    pro = DebateAgent(
-        name="Dr. Alex Chen",
-        position="FOR",
-        expertise="technology economist and AI researcher"
-    )
-    con = DebateAgent(
-        name="Prof. Sarah Martinez",
-        position="AGAINST",
-        expertise="labor economist and social policy expert"
-    )
-    judge = DebateJudge()
+        last_pro_arg = pro_arg
+        last_con_arg = con_arg
 
     print(f"\n{'='*60}")
-    print(f"⚖️  DEBATE: {topic}")
-    print(f"{'='*60}")
-    print(f"🟢 FOR: {pro.name} ({pro.expertise})")
-    print(f"🔴 AGAINST: {con.name} ({con.expertise})")
-    print(f"🏛️  Rounds: {rounds}")
+    print("🏛️  JUDGE'S VERDICT")
     print("=" * 60)
+    verdict = judge.evaluate(topic, pro, con)
+    print(verdict["verdict"])
 
-    last_con_arg = ""
-    last_pro_arg = ""
 
-    for round_num in range(1, rounds + 1):
+def main():
+    parser = argparse.ArgumentParser(description="Multi-Agent Debate System")
+    parser.add_argument("--topic", default="AI will create more jobs than it eliminates over the next decade", help="Debate topic")
+    parser.add_argument("--rounds", type=int, default=2, help="Number of debate rounds (1-4)")
+    args = parser.parse_args()
+
+    rounds = max(1, min(4, args.rounds))
+    run_debate(args.topic, rounds)
+
+
+if __name__ == "__main__":
+    main()

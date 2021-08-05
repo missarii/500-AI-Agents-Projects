@@ -1,27 +1,28 @@
+    "entities": [
+      {"type": "email", "category": "PRIVATE"},
+      {"type": "phone", "category": "PRIVATE"},
+      {"type": "national_id", "category": "PRIVATE"}
+    ]
+  }
+}
 ```
 
-With no API key it uses the **free trial** (50 sanitizations, `tx_hash=TRIAL`).
-For higher volume, pay once via x402 and pass the Solana tx hash:
+(Runtime: ~2–5 s per call depending on network. End-to-end demo under 10 min.)
 
-```bash
-export TRUSTBOOST_WALLET="<your-agent-wallet>"
-python agent.py --text "..." --tx-hash "<solana_tx_hash>"
-```
+## Ethical considerations
 
-Sanitize a file:
+- Raw input is never stored by this agent. Sanitized output may be retained by the
+  API provider for 90 days for audit; see the TrustBoost privacy docs.
+- Fails closed on API error — it will not emit raw PII if the service is unreachable.
+- Human oversight is recommended for high-risk deployments (healthcare, finance, legal).
+- The included `sk-abc123fakekeynotreal0000000000` in sample text is a **fake** fixture,
+  exactly what the redactor should catch.
 
-```bash
-python agent.py --file input.txt --context legal
-```
+## Compliance context
 
-Context modes: `general | financial | legal | medical | code`.
+EU AI Act, GDPR, HIPAA, LGPD. Use this agent wherever agent-to-agent or
+agent-to-LLM text carries user data.
 
-## Sample output
+## License
 
-```json
-{
-  "status": "success",
-  "data": {
-    "sanitized_content": "Hi, I'm [REDACTED]. My email is [REDACTED] and my phone is [REDACTED]. RFC: [REDACTED]. Account [REDACTED]. API key [REDACTED].",
-    "safety_score": 0.6,
-    "risk_category": "PRIVATE",
+MIT (repository root). The TrustBoost API is a separate service; see its terms.

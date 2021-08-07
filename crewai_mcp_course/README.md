@@ -1,36 +1,36 @@
+```
+
+5. Run the examples:
 ```bash
 python lesson_01/agent.py
 python lesson_02/agent.py --topic "AI agents in healthcare"
 
-# Lesson 03 includes a matching FastMCP server and CrewAI wrappers.
 python lesson_03/agent.py
 # Optional: inspect/run the FastMCP server separately:
 python lesson_03/mcp_server.py
 ```
 
-### Using uv (recommended modern method)
+## Requirements
 
-[uv](https://github.com/astral-sh/uv) is a fast Python package installer and resolver. To use uv:
+- Python 3.8+
+- CrewAI library
+- FastMCP library
+- OpenAI API key
+- FastMCP server example for Lesson 03
 
-1. Install uv:
-```bash
-pip install uv
-```
+## Course Structure
 
-2. Create and activate a virtual environment:
-```bash
-uv venv
-source .venv/Scripts/activate
-```
+Each lesson includes:
+- A lesson folder with `agent.py`, `requirements.txt`, and `.env.example`
+- Clear objectives and expected outcomes
+- Step-by-step implementation
+- Best practices for error handling and security
 
-3. Install dependencies:
-```bash
-uv pip install -r lesson_01/requirements.txt
-uv pip install -r lesson_02/requirements.txt
-uv pip install -r lesson_03/requirements.txt
-```
+## Next Steps
 
-4. Set up your environment variables:
-```bash
-export OPENAI_API_KEY=your-openai-api-key
-export MCP_SERVER_URL=http://localhost:8000
+After completing this course, you should be able to:
+- Create and configure CrewAI agents
+- Integrate MCP servers with agent workflows
+- Build complex multi-agent systems
+- Implement data sharing between agents
+- Design robust error handling for production systems

@@ -1,36 +1,37 @@
-# Custom Tool: Text Formatter
-class TextFormatterTool(BaseTool):
-    name: str = "text_formatter"
-    description: str = "Format text as a numbered list. Input: comma-separated items."
-
-    def _run(self, items: str) -> str:
-        item_list = [i.strip() for i in items.split(",")]
-        return "\n".join(f"{i+1}. {item}" for i, item in enumerate(item_list))
-
-
-word_counter = WordCountTool()
-formatter = TextFormatterTool()
-
-# Agent 1: Researcher
-researcher = Agent(
-    role="Senior Researcher",
-    goal="Research topics thoroughly and provide factual, well-structured information",
-    backstory="PhD researcher with expertise in synthesizing complex information from multiple sources.",
+    goal="Review and polish content for clarity, accuracy, and conciseness",
+    backstory="Senior editor who ensures all content meets the highest quality standards.",
     llm=llm,
-    tools=[word_counter],
     verbose=True,
 )
 
-# Agent 2: Writer
-writer = Agent(
-    role="Technical Writer",
-    goal="Transform research into clear, engaging content for technical audiences",
-    backstory="Award-winning technical writer with 10 years experience in AI/ML documentation.",
-    llm=llm,
-    tools=[formatter],
-    verbose=True,
-)
 
-# Agent 3: Editor
-editor = Agent(
-    role="Content Editor",
+def run_crew(topic: str) -> str:
+    research_task = Task(
+        description=f"""Research the topic: "{topic}"
+
+        Find:
+        1. Core definition and key concepts (3 bullet points)
+        2. Current applications (3 real examples)
+        3. Future potential (2 predictions)
+        4. Key challenges or limitations
+
+        Use the word_counter tool to verify your output is under 250 words.""",
+        expected_output="Research brief with definitions, applications, and future outlook",
+        agent=researcher,
+    )
+
+    writing_task = Task(
+        description=f"""Transform the research into an engaging technical article about "{topic}".
+
+        Structure:
+        - Hook opening (1-2 sentences)
+        - What it is (clear definition)
+        - Why it matters (use formatter tool for 3 key benefits as numbered list)
+        - Real-world impact (2 examples)
+        - Call to action closing
+
+        Target: 200-250 words, technical but accessible.""",
+        expected_output="Polished technical article ready for publication",
+        agent=writer,
+        context=[research_task],
+    )

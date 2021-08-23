@@ -1,31 +1,32 @@
-
     @mcp.tool()
-    def prioritize_tasks(tasks: list[str]) -> str:
+    def calculate_project_metrics(tasks_completed: int, tasks_total: int) -> dict:
         """
-        Prioritize a list of tasks by estimated importance.
+        Calculate project completion metrics.
 
         Args:
-            tasks: List of task descriptions to prioritize
+            tasks_completed: Number of completed tasks
+            tasks_total: Total number of tasks
 
         Returns:
-            JSON string with prioritized tasks
+            Dictionary with completion percentage and status
         """
-        prioritized = []
-        for i, task in enumerate(tasks):
-            priority = "HIGH" if i < len(tasks) // 3 else "MEDIUM" if i < 2 * len(tasks) // 3 else "LOW"
-            prioritized.append({"rank": i + 1, "task": task, "priority": priority})
-        return json.dumps(prioritized, indent=2)
+        percentage = (tasks_completed / tasks_total * 100) if tasks_total > 0 else 0
+        status = "On Track" if percentage >= 50 else "At Risk" if percentage >= 25 else "Behind"
+        return {
+            "completed": tasks_completed,
+            "total": tasks_total,
+            "percentage": round(percentage, 1),
+            "status": status,
+        }
 
-    @mcp.tool()
-    def format_as_json(data: dict) -> str:
-        """
-        Format data as pretty-printed JSON.
+    return mcp
 
-        Args:
-            data: Dictionary to format
 
-        Returns:
-            Pretty-printed JSON string
-        """
-        return json.dumps(data, indent=2, default=str)
-
+if __name__ == "__main__":
+    mcp = create_mcp_server()
+    if mcp:
+        print("🚀 MCP Server starting on localhost:8000")
+        print("Tools available: get_datetime, prioritize_tasks, format_as_json, calculate_project_metrics")
+        mcp.run(transport="streamable-http", host="localhost", port=8000)
+    else:
+        print("Install fastmcp to run the server: pip install fastmcp")

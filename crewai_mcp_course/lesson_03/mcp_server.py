@@ -1,32 +1,31 @@
-"""
-FastMCP Server for Lesson 03.
-
-Exposes tools that CrewAI agents can call via the MCP protocol.
-This is the server side — agents connect to this to use the tools.
-
-Run: python mcp_server.py
-(Keep this running while agent.py is running)
-"""
-
-import json
-from datetime import datetime
-
-try:
-    from fastmcp import FastMCP
-    HAS_FASTMCP = True
-except ImportError:
-    HAS_FASTMCP = False
-    print("FastMCP not installed. Run: pip install fastmcp")
-    print("Showing example server code only.\n")
-
-
-def create_mcp_server():
-    if not HAS_FASTMCP:
-        return None
-
-    mcp = FastMCP("CrewAI Course Tools")
 
     @mcp.tool()
-    def get_datetime() -> str:
-        """Get the current date and time in UTC."""
-        return datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+    def prioritize_tasks(tasks: list[str]) -> str:
+        """
+        Prioritize a list of tasks by estimated importance.
+
+        Args:
+            tasks: List of task descriptions to prioritize
+
+        Returns:
+            JSON string with prioritized tasks
+        """
+        prioritized = []
+        for i, task in enumerate(tasks):
+            priority = "HIGH" if i < len(tasks) // 3 else "MEDIUM" if i < 2 * len(tasks) // 3 else "LOW"
+            prioritized.append({"rank": i + 1, "task": task, "priority": priority})
+        return json.dumps(prioritized, indent=2)
+
+    @mcp.tool()
+    def format_as_json(data: dict) -> str:
+        """
+        Format data as pretty-printed JSON.
+
+        Args:
+            data: Dictionary to format
+
+        Returns:
+            Pretty-printed JSON string
+        """
+        return json.dumps(data, indent=2, default=str)
+

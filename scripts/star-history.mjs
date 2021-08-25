@@ -1,53 +1,53 @@
-      Array.from({ length: samples }, (_, i) => Math.round(1 + i * step))
-    )].sort((a, b) => a - b);
-  }
+  const px = (d) => PAD_L + ((d - t0) / span) * (W - PAD_L - PAD_R);
+  const py = (v) => H - PAD_B - (v / top) * (H - PAD_T - PAD_B);
 
-  const points = [];
-  for (const n of indices) {
-    let page;
-    try {
-      page = await get(`${API}/repos/${repo}/stargazers?per_page=1&page=${n}`, token, STAR_JSON);
-    } catch (e) {
-      // GitHub caps deep pagination on some endpoints. A gap mid-curve is
-      // survivable, so skip rather than abort the whole run.
-      console.error(`  skip index ${n}: ${e.message}`);
-      continue;
-    }
-    const at = page?.[0]?.starred_at;
-    if (at) points.push([new Date(at), n]);
-  }
+  const line = points.map(([d, v]) => `${px(d).toFixed(1)},${py(v).toFixed(1)}`).join(' ');
+  const area = `${PAD_L},${H - PAD_B} ${line} ${px(t1).toFixed(1)},${H - PAD_B}`;
 
-  points.sort((a, b) => a[0] - b[0]);
-  return points;
+  const grid = ticks.map((t) =>
+    `<line x1="${PAD_L}" y1="${py(t).toFixed(1)}" x2="${W - PAD_R}" y2="${py(t).toFixed(1)}" class="grid"/>`
+  ).join('\n');
+
+  const ylab = ticks.map((t) =>
+    `<text x="${PAD_L - 10}" y="${(py(t) + 4).toFixed(1)}" class="lbl" text-anchor="end">${fmt(t)}</text>`
+  ).join('\n');
+
+  const xlab = Array.from({ length: 5 }, (_, i) => {
+    const d = new Date(t0.getTime() + (t1 - t0) * (i / 4));
+    return `<text x="${px(d).toFixed(1)}" y="${H - PAD_B + 22}" class="lbl" text-anchor="middle">${monthYear(d)}</text>`;
+  }).join('\n');
+
+  const stars = points[points.length - 1][1].toLocaleString('en-US');
+  const updated = `${new Date().getUTCDate()} ${monthYear(new Date())}`;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Star history for ${repo}">
+<style>
+  .bg{fill:#ffffff} .grid{stroke:#d8dee4;stroke-width:1}
+  .lbl{fill:#57606a;font:12px -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif}
+  .ttl{fill:#1f2328;font:600 14px -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif}
+  .ln{fill:none;stroke:#ffc107;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+  .ar{fill:#ffc107;opacity:.15}
+  @media (prefers-color-scheme: dark){
+    .bg{fill:#0d1117} .grid{stroke:#30363d} .lbl{fill:#8b949e} .ttl{fill:#e6edf3}
+  }
+</style>
+<rect width="${W}" height="${H}" class="bg"/>
+${grid}
+<polygon points="${area}" class="ar"/>
+<polyline points="${line}" class="ln"/>
+${ylab}
+${xlab}
+<text x="${PAD_L}" y="20" class="ttl">${repo} &#183; ${stars} stars</text>
+<text x="${W - PAD_R}" y="20" class="lbl" text-anchor="end">updated ${updated}</text>
+</svg>
+`;
 }
 
-/** Round the axis maximum up to a readable step (1/2/2.5/5 x 10^n). */
-export function niceTicks(hi, count = 5) {
-  if (hi <= 0) return { ticks: [0], top: 1 };
-  const raw = hi / count;
-  const mag = 10 ** Math.floor(Math.log10(raw));
-  let step = 10 * mag;
-  for (const m of [1, 2, 2.5, 5, 10]) {
-    if (m * mag >= raw) { step = m * mag; break; }
-  }
-  const top = Math.round(step * count);
-  return { ticks: Array.from({ length: count + 1 }, (_, i) => Math.round(step * i)), top };
-}
-
-export function fmt(n) {
-  if (n < 1000) return String(n);
-  return n % 1000 === 0 ? `${n / 1000}k` : `${(n / 1000).toFixed(1)}k`;
-}
-
-const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const monthYear = (d) => `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
-
-export function renderSvg(points, repo) {
-  if (!points.length) {
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"></svg>\n`;
-  }
-
-  const t0 = points[0][0], t1 = points[points.length - 1][0];
-  const span = Math.max(t1 - t0, 1);
-  const { ticks, top } = niceTicks(points[points.length - 1][1]);
-
+/** Smallest thing that fails if the maths breaks. */
+function selfCheck() {
+  const pts = [
+    [new Date('2024-01-01T00:00:00Z'), 1],
+    [new Date('2024-06-01T00:00:00Z'), 500],
+    [new Date('2025-01-01T00:00:00Z'), 1000],
+  ];
+  const svg = renderSvg(pts, 'owner/repo');

@@ -1,53 +1,54 @@
-  const px = (d) => PAD_L + ((d - t0) / span) * (W - PAD_L - PAD_R);
-  const py = (v) => H - PAD_B - (v / top) * (H - PAD_T - PAD_B);
+  const ok = (c, m) => { if (!c) throw new Error(`self-check failed: ${m}`); };
 
-  const line = points.map(([d, v]) => `${px(d).toFixed(1)},${py(v).toFixed(1)}`).join(' ');
-  const area = `${PAD_L},${H - PAD_B} ${line} ${px(t1).toFixed(1)},${H - PAD_B}`;
+  ok(svg.startsWith('<svg'), 'must emit an svg root');
+  ok(svg.includes('1,000 stars'), 'final count must be rendered');
+  ok(svg.includes('polyline'), 'curve must be drawn');
 
-  const grid = ticks.map((t) =>
-    `<line x1="${PAD_L}" y1="${py(t).toFixed(1)}" x2="${W - PAD_R}" y2="${py(t).toFixed(1)}" class="grid"/>`
-  ).join('\n');
+  // Monotonic time must map to monotonic x, and stay inside the plot area.
+  const xs = svg.match(/<polyline points="([^"]+)"/)[1]
+    .split(' ').map((p) => parseFloat(p.split(',')[0]));
+  ok(xs.every((x, i) => i === 0 || x >= xs[i - 1]), 'x must increase with time');
+  ok(xs.every((x) => x >= PAD_L - 0.5 && x <= W - PAD_R + 0.5), 'curve must stay in frame');
 
-  const ylab = ticks.map((t) =>
-    `<text x="${PAD_L - 10}" y="${(py(t) + 4).toFixed(1)}" class="lbl" text-anchor="end">${fmt(t)}</text>`
-  ).join('\n');
+  const ys = svg.match(/<polyline points="([^"]+)"/)[1]
+    .split(' ').map((p) => parseFloat(p.split(',')[1]));
+  ok(ys.every((y) => y >= PAD_T - 0.5 && y <= H - PAD_B + 0.5), 'curve must stay vertically in frame');
 
-  const xlab = Array.from({ length: 5 }, (_, i) => {
-    const d = new Date(t0.getTime() + (t1 - t0) * (i / 4));
-    return `<text x="${px(d).toFixed(1)}" y="${H - PAD_B + 22}" class="lbl" text-anchor="middle">${monthYear(d)}</text>`;
-  }).join('\n');
+  const { ticks, top } = niceTicks(35133);
+  ok(top >= 35133, 'axis must not clip the highest value');
+  ok(ticks[0] === 0 && ticks.every((t, i) => i === 0 || t > ticks[i - 1]), 'ticks ascend from zero');
 
-  const stars = points[points.length - 1][1].toLocaleString('en-US');
-  const updated = `${new Date().getUTCDate()} ${monthYear(new Date())}`;
+  ok(fmt(1000) === '1k' && fmt(1500) === '1.5k' && fmt(999) === '999', 'number formatting');
+  ok(renderSvg([], 'x/y').startsWith('<svg'), 'zero stars must not crash');
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Star history for ${repo}">
-<style>
-  .bg{fill:#ffffff} .grid{stroke:#d8dee4;stroke-width:1}
-  .lbl{fill:#57606a;font:12px -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif}
-  .ttl{fill:#1f2328;font:600 14px -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif}
-  .ln{fill:none;stroke:#ffc107;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
-  .ar{fill:#ffc107;opacity:.15}
-  @media (prefers-color-scheme: dark){
-    .bg{fill:#0d1117} .grid{stroke:#30363d} .lbl{fill:#8b949e} .ttl{fill:#e6edf3}
-  }
-</style>
-<rect width="${W}" height="${H}" class="bg"/>
-${grid}
-<polygon points="${area}" class="ar"/>
-<polyline points="${line}" class="ln"/>
-${ylab}
-${xlab}
-<text x="${PAD_L}" y="20" class="ttl">${repo} &#183; ${stars} stars</text>
-<text x="${W - PAD_R}" y="20" class="lbl" text-anchor="end">updated ${updated}</text>
-</svg>
-`;
+  console.log('self-check OK');
 }
 
-/** Smallest thing that fails if the maths breaks. */
-function selfCheck() {
-  const pts = [
-    [new Date('2024-01-01T00:00:00Z'), 1],
-    [new Date('2024-06-01T00:00:00Z'), 500],
-    [new Date('2025-01-01T00:00:00Z'), 1000],
-  ];
-  const svg = renderSvg(pts, 'owner/repo');
+async function main() {
+  if (process.argv.includes('--self-check')) return selfCheck(), 0;
+
+  const repo = process.argv[2] || process.env.GITHUB_REPOSITORY;
+  const out = process.argv[3] || 'images/star-history.svg';
+  if (!repo) {
+    console.error('usage: star-history.mjs owner/repo [out.svg]');
+    return 2;
+  }
+
+  console.log(`sampling ${repo} ...`);
+  const points = await fetchPoints(repo, process.env.GITHUB_TOKEN);
+  if (!points.length) {
+    console.error('no stargazer data returned');
+    return 1;
+  }
+
+  mkdirSync(dirname(out) || '.', { recursive: true });
+  writeFileSync(out, renderSvg(points, repo), 'utf8');
+  console.log(`wrote ${out} from ${points.length} sampled points, ${points[points.length - 1][1]} stars`);
+  return 0;
+}
+
+// pathToFileURL handles the Windows drive-letter form (file:///d:/...) that
+// naive string concatenation gets wrong.
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  process.exit(await main());
+}

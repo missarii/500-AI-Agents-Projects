@@ -1,132 +1,132 @@
-import { useEffect, useMemo, useState } from "react";
-import {
-  ArrowRight,
-  BookOpen,
-  Boxes,
-  CheckCircle2,
-  Code2,
-  Copy,
-  ExternalLink,
-  FileText,
-  Filter,
-  GitBranch,
-  Github,
-  GraduationCap,
-  Layers3,
-  Network,
-  Play,
-  Search,
-  Terminal,
-  Workflow,
-  Zap,
-} from "lucide-react";
-import { catalog, slugify, stripMarkdown } from "./content.js";
-
-const routeLabels = [
-  { path: "/", label: "Atlas" },
-  { path: "/course", label: "Course" },
-  { path: "/agents", label: "Agents" },
-  { path: "/use-cases", label: "Use cases" },
-  { path: "/frameworks", label: "Frameworks" },
-];
-
-function useHashRoute() {
-  const [route, setRoute] = useState(() => window.location.hash.slice(1) || "/");
-
-  useEffect(() => {
-    const onHashChange = () => setRoute(window.location.hash.slice(1) || "/");
-    window.addEventListener("hashchange", onHashChange);
-    return () => window.removeEventListener("hashchange", onHashChange);
-  }, []);
-
-  return route;
-}
-
-function pathFor(route) {
-  return `#${route}`;
-}
-
-function normalize(value = "") {
-  return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-}
-
-function matchesQuery(item, query) {
-  if (!query) return true;
-  const haystack = normalize(
-    [
-      item.title,
-      item.description,
-      item.framework,
-      item.industry,
-      item.sourceHeading,
-      item.tags?.join(" "),
-    ].join(" "),
-  );
-  return normalize(query)
-    .split(" ")
-    .filter(Boolean)
-    .every((part) => haystack.includes(part));
-}
-
-function getIntro(markdown = "", fallback = "") {
-  const lines = markdown
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .filter((line) => !line.startsWith("#") && !line.startsWith("```"));
-
-  return stripMarkdown(lines.find((line) => line.length > 30) || fallback).slice(0, 260);
-}
-
-function Shell({ route, children }) {
-  return (
-    <div className="app-shell">
-      <header className="topbar">
-        <a className="brand" href={pathFor("/")}>
-          <span className="brand-mark">
-            <Network size={18} aria-hidden="true" />
-          </span>
-          <span>
-            <strong>AI Agents Atlas</strong>
-            <small>500+ project map</small>
-          </span>
-        </a>
-
-        <nav className="nav-links" aria-label="Main navigation">
-          {routeLabels.map((item) => (
-            <a
-              className={
-                route === item.path || (item.path !== "/" && route.startsWith(`${item.path}/`))
-                  ? "active"
-                  : ""
-              }
-              href={pathFor(item.path)}
-              key={item.path}
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
-
-        <a className="icon-link" href="https://github.com/ashishpatel26/500-AI-Agents-Projects">
-          <Github size={18} aria-hidden="true" />
-          <span>GitHub</span>
-        </a>
-      </header>
-      <main>{children}</main>
-    </div>
+        return (
+          <article className="stat-tile" key={stat.label}>
+            <Icon size={18} aria-hidden="true" />
+            <strong>{stat.value}</strong>
+            <span>{stat.label}</span>
+          </article>
+        );
+      })}
+    </section>
   );
 }
 
-function StatStrip() {
-  const stats = [
-    { label: "Runnable agents", value: catalog.agents.length, icon: Code2 },
-    { label: "README use cases", value: catalog.useCases.length, icon: Boxes },
-    { label: "Framework families", value: catalog.frameworks.length, icon: Workflow },
-    { label: "Course lessons", value: catalog.courseLessons.length, icon: GraduationCap },
+function GraphHero() {
+  const nodes = [
+    { label: "CrewAI course", path: "/course", x: 11, y: 22, tone: "green" },
+    { label: "Runnable agents", path: "/agents", x: 52, y: 13, tone: "cyan" },
+    { label: "Use cases", path: "/use-cases", x: 74, y: 48, tone: "amber" },
+    { label: "Frameworks", path: "/frameworks", x: 24, y: 65, tone: "rose" },
+    { label: "Code pages", path: "/agents/01-web-research-agent", x: 54, y: 78, tone: "violet" },
   ];
 
   return (
-    <section className="stat-strip" aria-label="Repository statistics">
-      {stats.map((stat) => {
-        const Icon = stat.icon;
+    <section className="hero-grid">
+      <div className="hero-copy">
+        <p className="eyebrow">Course front page plus project atlas</p>
+        <h1>500+ AI Agent Projects</h1>
+        <p>
+          A premium React atlas for learning, browsing, running, and redirecting into the
+          strongest AI agent examples in this repository.
+        </p>
+        <div className="hero-actions">
+          <a className="primary-action" href={pathFor("/course")}>
+            <GraduationCap size={18} aria-hidden="true" />
+            Start course
+          </a>
+          <a className="secondary-action" href={pathFor("/use-cases")}>
+            <Search size={18} aria-hidden="true" />
+            Browse use cases
+          </a>
+        </div>
+      </div>
+
+      <div className="graph-stage" aria-label="Interactive agent atlas graph">
+        <svg className="edge-layer" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path className="graph-edge edge-one" d="M12 25 C30 8, 42 12, 52 16" />
+          <path className="graph-edge edge-two" d="M54 18 C69 23, 78 33, 75 50" />
+          <path className="graph-edge edge-three" d="M72 51 C61 71, 51 78, 27 67" />
+          <path className="graph-edge edge-four" d="M25 65 C12 54, 8 38, 12 25" />
+          <path className="graph-edge edge-five" d="M53 17 C48 39, 48 60, 54 78" />
+        </svg>
+        {nodes.map((node) => (
+          <a
+            className={`graph-node tone-${node.tone}`}
+            href={pathFor(node.path)}
+            key={node.label}
+            style={{ left: `${node.x}%`, top: `${node.y}%` }}
+          >
+            <span />
+            {node.label}
+          </a>
+        ))}
+        <div className="graph-console">
+          <span>agent_state</span>
+          <strong>ready</strong>
+          <small>nodes: {catalog.agents.length + catalog.frameworks.length}</small>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SearchPanel({ compact = false }) {
+  const [query, setQuery] = useState("");
+  const agentMatches = catalog.agents.filter((agent) => matchesQuery(agent, query)).slice(0, 4);
+  const useCaseMatches = catalog.useCases.filter((useCase) => matchesQuery(useCase, query)).slice(0, 6);
+
+  return (
+    <section className={compact ? "search-panel compact" : "search-panel"}>
+      <label className="search-box">
+        <Search size={18} aria-hidden="true" />
+        <input
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Search agents, use cases, frameworks, industries"
+        />
+      </label>
+
+      <div className="search-results">
+        {[...agentMatches, ...useCaseMatches].map((item) => {
+          const isAgent = Boolean(item.localPath);
+          return (
+            <a
+              className="result-row"
+              href={pathFor(isAgent ? `/agents/${item.slug}` : `/use-cases/${item.id}`)}
+              key={`${isAgent ? "agent" : "case"}-${item.id}`}
+            >
+              <span className={`mini-dot ${slugify(item.framework)}`} />
+              <strong>{item.title}</strong>
+              <small>{isAgent ? item.localPath : item.sourceHeading}</small>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function HomePage() {
+  const featuredAgents = catalog.agents.slice(0, 6);
+  const featuredUseCases = catalog.useCases.slice(0, 8);
+
+  return (
+    <>
+      <GraphHero />
+      <StatStrip />
+
+      <section className="split-section">
+        <div className="section-copy">
+          <p className="eyebrow">Start here</p>
+          <h2>CrewAI with FastMCP-style lessons at the front</h2>
+          <p>
+            The course is the guided entry point, then the atlas opens into local code agents
+            and README-linked external examples.
+          </p>
+          <a className="inline-action" href={pathFor("/course")}>
+            Open course page <ArrowRight size={16} aria-hidden="true" />
+          </a>
+        </div>
+        <CourseRail />
+      </section>
+
+      <section className="media-band">

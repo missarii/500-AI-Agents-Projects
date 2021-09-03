@@ -1,132 +1,133 @@
-            Redirect
-          </a>
-        ) : null}
-      </div>
-    </article>
-  );
-}
-
-function CoursePage() {
-  return (
-    <>
-      <PageHero
-        eyebrow="Course"
-        title="CrewAI with FastMCP-style integration"
-        description={getIntro(catalog.courseReadme, "A practical course for building CrewAI workflows with MCP-style tool boundaries.")}
-        icon={GraduationCap}
-      />
-      <section className="split-section">
-        <div className="section-copy">
-          <h2>Learning path</h2>
-          <p>
-            Each lesson has its own page with objectives, run commands, code files, and a code
-            walkthrough surface.
-          </p>
-          <div className="command-stack">
-            <CodeBlock
-              code={[
-                "cd crewai_mcp_course/lesson_01",
-                "pip install -r requirements.txt",
-                "python agent.py",
-              ].join("\n")}
-              compact
-            />
-          </div>
-        </div>
-        <CourseRail />
-      </section>
-      <section className="content-band">
-        <SectionHeader eyebrow="Lessons" title="Separate lesson pages" />
-        <div className="lesson-grid">
-          {catalog.courseLessons.map((lesson) => (
-            <a className="lesson-card" href={pathFor(`/course/${lesson.slug}`)} key={lesson.slug}>
-              <span>{lesson.number}</span>
-              <h3>{lesson.title}</h3>
-              <p>{lesson.summary}</p>
-              <ul>
-                {lesson.objectives.slice(0, 3).map((objective) => (
-                  <li key={objective}>
-                    <CheckCircle2 size={15} aria-hidden="true" />
-                    {objective}
-                  </li>
-                ))}
-              </ul>
-            </a>
-          ))}
-        </div>
-      </section>
-    </>
-  );
-}
-
-function LessonPage({ lesson }) {
-  const [selectedFile, setSelectedFile] = useState(lesson.files[0]?.label || "");
-  const file = lesson.files.find((item) => item.label === selectedFile) || lesson.files[0];
+    { label: "requirements.txt", path: `${agent.localPath}/requirements.txt`, content: agent.requirementsText },
+    { label: "metadata.yaml", path: `${agent.localPath}/metadata.yaml`, content: agent.metadataText },
+  ];
+  const selected = files.find((file) => file.label === selectedFile) || files[0];
+  const related = catalog.agents
+    .filter((item) => item.slug !== agent.slug && item.framework === agent.framework)
+    .slice(0, 3);
 
   return (
     <>
       <PageHero
-        eyebrow={`Lesson ${lesson.number}`}
-        title={lesson.title}
-        description={lesson.summary}
-        icon={BookOpen}
+        eyebrow={`${agent.framework} agent`}
+        title={agent.title}
+        description={agent.description}
+        icon={GitBranch}
       />
       <section className="detail-layout">
         <aside className="detail-aside">
-          <h2>Objectives</h2>
-          <ul className="check-list">
-            {lesson.objectives.map((objective) => (
-              <li key={objective}>
-                <CheckCircle2 size={16} aria-hidden="true" />
-                {objective}
-              </li>
-            ))}
-          </ul>
-          <h2>Run</h2>
-          <CodeBlock code={lesson.runCommands.join("\n")} compact />
+          <MetadataPanel agent={agent} />
+          <h2>Run in 5 minutes</h2>
+          <CodeBlock
+            code={
+              (agent.runCommands[0] || agent.setupCommands[0]) ??
+              [`cd ${agent.localPath}`, "pip install -r requirements.txt", "python agent.py"].join("\n")
+            }
+            compact
+          />
+          <h2>Architecture</h2>
+          <FlowTrace agent={agent} />
         </aside>
         <article className="detail-main">
-          <FileTabs files={lesson.files} selected={selectedFile} onSelect={setSelectedFile} />
-          <CodeBlock code={file?.content || "# File content not found"} />
-          <CodeExplanation code={file?.content || ""} context="lesson" />
+          <section className="explain-panel">
+            <h2>How it works</h2>
+            <p>{getIntro(agent.readme, agent.description)}</p>
+            <ul className="check-list">
+              {(agent.features.length ? agent.features : defaultAgentSteps(agent)).map((feature) => (
+                <li key={feature}>
+                  <CheckCircle2 size={16} aria-hidden="true" />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </section>
+          <FileTabs files={files} selected={selectedFile} onSelect={setSelectedFile} />
+          <CodeBlock code={selected.content || "# File content not found"} />
+          <CodeExplanation code={selected.content || ""} context={selected.label} agent={agent} />
+          {related.length ? (
+            <section className="related-band">
+              <h2>Related {agent.framework} agents</h2>
+              <div className="mini-card-grid">
+                {related.map((item) => (
+                  <AgentCard agent={item} key={item.id} />
+                ))}
+              </div>
+            </section>
+          ) : null}
         </article>
       </section>
     </>
   );
 }
 
-function AgentsPage() {
+function defaultAgentSteps(agent) {
+  return [
+    `Loads configuration for ${agent.llm}`,
+    `Creates a ${agent.framework} workflow around the core task`,
+    "Accepts user input through the command line or defaults",
+    "Calls tools, models, or local data helpers",
+    "Returns a structured result for the user",
+  ];
+}
+
+function MetadataPanel({ agent }) {
+  const rows = [
+    ["Path", agent.localPath],
+    ["Framework", agent.framework],
+    ["Difficulty", agent.difficulty],
+    ["Industry", agent.industry],
+    ["Model", agent.llm],
+    ["Language", agent.language],
+  ];
+
+  return (
+    <section className="metadata-panel">
+      <h2>Project metadata</h2>
+      {rows.map(([label, value]) => (
+        <div className="meta-row" key={label}>
+          <span>{label}</span>
+          <strong>{value}</strong>
+        </div>
+      ))}
+    </section>
+  );
+}
+
+function FlowTrace({ agent }) {
+  const steps =
+    agent.framework === "Langgraph" || agent.framework === "LangGraph"
+      ? ["Input", "State", "Node", "Tool", "Response"]
+      : agent.framework === "Crewai" || agent.framework === "CrewAI"
+        ? ["Goal", "Agent", "Task", "Crew", "Output"]
+        : ["Input", "Planner", "Tool", "Model", "Output"];
+
+  return (
+    <div className="flow-trace">
+      {steps.map((step, index) => (
+        <div className="flow-step" key={step}>
+          <span>{index + 1}</span>
+          <strong>{step}</strong>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function UseCasesPage() {
   const [query, setQuery] = useState("");
   const [framework, setFramework] = useState("all");
-  const frameworks = ["all", ...new Set(catalog.agents.map((agent) => slugify(agent.framework)))];
-  const agents = catalog.agents.filter(
-    (agent) =>
-      matchesQuery(agent, query) &&
-      (framework === "all" || slugify(agent.framework) === framework),
+  const frameworks = ["all", ...new Set(catalog.useCases.map((item) => slugify(item.framework)))];
+  const useCases = catalog.useCases.filter(
+    (item) =>
+      matchesQuery(item, query) &&
+      (framework === "all" || slugify(item.framework) === framework),
   );
 
   return (
     <>
       <PageHero
-        eyebrow="Runnable agents"
-        title="Local code pages for every implementation"
-        description="Each agent page explains the framework, setup, run commands, architecture, and code structure from the files in agents/."
-        icon={Code2}
+        eyebrow="README catalog"
+        title="Dedicated page for every README use case"
+        description="The catalog is parsed from the repository README tables, so each external project gets a page, source section, and redirect route."
+        icon={Boxes}
       />
-      <CatalogToolbar query={query} onQuery={setQuery} filters={frameworks} filter={framework} onFilter={setFramework} />
-      <section className="content-band">
-        <div className="card-grid">
-          {agents.map((agent) => (
-            <AgentCard agent={agent} key={agent.id} />
-          ))}
-        </div>
-      </section>
-    </>
-  );
-}
-
-function AgentPage({ agent }) {
-  const [selectedFile, setSelectedFile] = useState("agent.py");
-  const files = [
-    { label: "agent.py", path: `${agent.localPath}/agent.py`, content: agent.code },
-    { label: "README.md", path: `${agent.localPath}/README.md`, content: agent.readme },

@@ -1,55 +1,93 @@
-    { label: "requirements.txt", path: `${agent.localPath}/requirements.txt`, content: agent.requirementsText },
-    { label: "metadata.yaml", path: `${agent.localPath}/metadata.yaml`, content: agent.metadataText },
-  ];
-  const selected = files.find((file) => file.label === selectedFile) || files[0];
-  const related = catalog.agents
-    .filter((item) => item.slug !== agent.slug && item.framework === agent.framework)
-    .slice(0, 3);
+      <CatalogToolbar query={query} onQuery={setQuery} filters={frameworks} filter={framework} onFilter={setFramework} />
+      <section className="content-band">
+        <div className="catalog-count">{useCases.length} matching use cases</div>
+        <div className="usecase-grid">
+          {useCases.map((useCase) => (
+            <UseCaseCard useCase={useCase} key={useCase.id} />
+          ))}
+        </div>
+      </section>
+    </>
+  );
+}
+
+function UseCasePage({ useCase }) {
+  const relatedAgents = catalog.agents
+    .filter(
+      (agent) =>
+        slugify(agent.framework) === slugify(useCase.framework) ||
+        slugify(agent.industry) === slugify(useCase.industry),
+    )
+    .slice(0, 4);
+  const relatedCases = catalog.useCases
+    .filter((item) => item.id !== useCase.id && item.framework === useCase.framework)
+    .slice(0, 4);
 
   return (
     <>
       <PageHero
-        eyebrow={`${agent.framework} agent`}
-        title={agent.title}
-        description={agent.description}
-        icon={GitBranch}
+        eyebrow={useCase.sourceHeading}
+        title={useCase.title}
+        description={useCase.description}
+        icon={ExternalLink}
       />
       <section className="detail-layout">
         <aside className="detail-aside">
-          <MetadataPanel agent={agent} />
-          <h2>Run in 5 minutes</h2>
-          <CodeBlock
-            code={
-              (agent.runCommands[0] || agent.setupCommands[0]) ??
-              [`cd ${agent.localPath}`, "pip install -r requirements.txt", "python agent.py"].join("\n")
-            }
-            compact
-          />
-          <h2>Architecture</h2>
-          <FlowTrace agent={agent} />
+          <section className="metadata-panel">
+            <h2>Use case metadata</h2>
+            <div className="meta-row">
+              <span>Framework</span>
+              <strong>{useCase.framework}</strong>
+            </div>
+            <div className="meta-row">
+              <span>Industry</span>
+              <strong>{useCase.industry}</strong>
+            </div>
+            <div className="meta-row">
+              <span>Source</span>
+              <strong>{useCase.sourceHeading}</strong>
+            </div>
+            <div className="meta-row">
+              <span>Resource</span>
+              <strong>{useCase.resourceType}</strong>
+            </div>
+          </section>
+          {useCase.url ? (
+            <a className="primary-action full-width" href={pathFor(`/go/${useCase.id}`)}>
+              <ExternalLink size={18} aria-hidden="true" />
+              Open redirect
+            </a>
+          ) : null}
         </aside>
         <article className="detail-main">
           <section className="explain-panel">
-            <h2>How it works</h2>
-            <p>{getIntro(agent.readme, agent.description)}</p>
-            <ul className="check-list">
-              {(agent.features.length ? agent.features : defaultAgentSteps(agent)).map((feature) => (
-                <li key={feature}>
-                  <CheckCircle2 size={16} aria-hidden="true" />
-                  {feature}
-                </li>
-              ))}
-            </ul>
+            <h2>What this adds</h2>
+            <p>
+              This page turns a README table row into a durable catalog entry with context,
+              framework grouping, industry filtering, and a redirect route for the source project.
+            </p>
+            <div className="source-block">
+              <strong>{useCase.title}</strong>
+              <span>{useCase.description}</span>
+              {useCase.url ? <code>{useCase.url}</code> : null}
+            </div>
           </section>
-          <FileTabs files={files} selected={selectedFile} onSelect={setSelectedFile} />
-          <CodeBlock code={selected.content || "# File content not found"} />
-          <CodeExplanation code={selected.content || ""} context={selected.label} agent={agent} />
-          {related.length ? (
+          {relatedAgents.length ? (
             <section className="related-band">
-              <h2>Related {agent.framework} agents</h2>
+              <h2>Related local agents</h2>
               <div className="mini-card-grid">
-                {related.map((item) => (
-                  <AgentCard agent={item} key={item.id} />
+                {relatedAgents.map((agent) => (
+                  <AgentCard agent={agent} key={agent.id} />
+                ))}
+              </div>
+            </section>
+          ) : null}
+          {relatedCases.length ? (
+            <section className="related-band">
+              <h2>Similar use cases</h2>
+              <div className="usecase-grid compact-grid">
+                {relatedCases.map((item) => (
+                  <UseCaseCard useCase={item} key={item.id} />
                 ))}
               </div>
             </section>
@@ -60,74 +98,35 @@
   );
 }
 
-function defaultAgentSteps(agent) {
-  return [
-    `Loads configuration for ${agent.llm}`,
-    `Creates a ${agent.framework} workflow around the core task`,
-    "Accepts user input through the command line or defaults",
-    "Calls tools, models, or local data helpers",
-    "Returns a structured result for the user",
-  ];
-}
+function RedirectPage({ useCase }) {
+  useEffect(() => {
+    if (!useCase?.url) return undefined;
+    const timer = window.setTimeout(() => {
+      window.location.href = useCase.url;
+    }, 900);
+    return () => window.clearTimeout(timer);
+  }, [useCase]);
 
-function MetadataPanel({ agent }) {
-  const rows = [
-    ["Path", agent.localPath],
-    ["Framework", agent.framework],
-    ["Difficulty", agent.difficulty],
-    ["Industry", agent.industry],
-    ["Model", agent.llm],
-    ["Language", agent.language],
-  ];
+  if (!useCase) return <NotFound />;
 
   return (
-    <section className="metadata-panel">
-      <h2>Project metadata</h2>
-      {rows.map(([label, value]) => (
-        <div className="meta-row" key={label}>
-          <span>{label}</span>
-          <strong>{value}</strong>
-        </div>
-      ))}
-    </section>
+    <PageHero
+      eyebrow="Redirect"
+      title={useCase.title}
+      description={`Opening ${useCase.url || "the source project"}.`}
+      icon={ExternalLink}
+      action={
+        useCase.url
+          ? {
+              label: "Open now",
+              href: useCase.url,
+              external: true,
+            }
+          : null
+      }
+    />
   );
 }
 
-function FlowTrace({ agent }) {
-  const steps =
-    agent.framework === "Langgraph" || agent.framework === "LangGraph"
-      ? ["Input", "State", "Node", "Tool", "Response"]
-      : agent.framework === "Crewai" || agent.framework === "CrewAI"
-        ? ["Goal", "Agent", "Task", "Crew", "Output"]
-        : ["Input", "Planner", "Tool", "Model", "Output"];
-
-  return (
-    <div className="flow-trace">
-      {steps.map((step, index) => (
-        <div className="flow-step" key={step}>
-          <span>{index + 1}</span>
-          <strong>{step}</strong>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function UseCasesPage() {
-  const [query, setQuery] = useState("");
-  const [framework, setFramework] = useState("all");
-  const frameworks = ["all", ...new Set(catalog.useCases.map((item) => slugify(item.framework)))];
-  const useCases = catalog.useCases.filter(
-    (item) =>
-      matchesQuery(item, query) &&
-      (framework === "all" || slugify(item.framework) === framework),
-  );
-
-  return (
-    <>
-      <PageHero
-        eyebrow="README catalog"
-        title="Dedicated page for every README use case"
-        description="The catalog is parsed from the repository README tables, so each external project gets a page, source section, and redirect route."
-        icon={Boxes}
-      />
+function FrameworksPage({ frameworkSlug }) {
+  const selected = catalog.frameworks.find((item) => item.slug === frameworkSlug);

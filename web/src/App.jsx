@@ -1,132 +1,132 @@
-  const visibleFrameworks = selected ? [selected] : catalog.frameworks;
+function CodeBlock({ code, compact = false }) {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    await navigator.clipboard?.writeText(code);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1200);
+  };
 
   return (
-    <>
-      <PageHero
-        eyebrow="Frameworks"
-        title={selected ? selected.name : "Choose the right agent framework"}
-        description={
-          selected
-            ? selected.decision
-            : "Compare the main framework families represented in this repository, then jump into matching agents and examples."
-        }
-        icon={Workflow}
-      />
-      <section className="content-band">
-        <div className="framework-grid">
-          {visibleFrameworks.map((framework) => {
-            const agents = catalog.agents.filter(
-              (agent) => slugify(agent.framework) === framework.slug,
-            );
-            const useCases = catalog.useCases.filter(
-              (useCase) => slugify(useCase.framework) === framework.slug,
-            );
-            return (
-              <article className={`framework-detail tone-${framework.accent}`} key={framework.slug}>
-                <div>
-                  <h2>{framework.name}</h2>
-                  <p>{framework.bestFor}</p>
-                  <span>{framework.decision}</span>
-                </div>
-                <div className="framework-stats">
-                  <strong>{agents.length}</strong>
-                  <span>local agents</span>
-                  <strong>{useCases.length}</strong>
-                  <span>README use cases</span>
-                </div>
-                <a className="inline-action" href={pathFor(`/frameworks/${framework.slug}`)}>
-                  Open framework <ArrowRight size={16} aria-hidden="true" />
-                </a>
-              </article>
-            );
-          })}
-        </div>
-      </section>
-      {selected ? (
-        <section className="content-band">
-          <SectionHeader eyebrow={selected.name} title="Matching examples" />
-          <div className="card-grid">
-            {catalog.agents
-              .filter((agent) => slugify(agent.framework) === selected.slug)
-              .slice(0, 6)
-              .map((agent) => (
-                <AgentCard agent={agent} key={agent.id} />
-              ))}
-          </div>
-        </section>
-      ) : null}
-    </>
-  );
-}
-
-function CatalogToolbar({ query, onQuery, filters, filter, onFilter }) {
-  return (
-    <section className="catalog-toolbar">
-      <label className="search-box">
-        <Search size={18} aria-hidden="true" />
-        <input
-          value={query}
-          onChange={(event) => onQuery(event.target.value)}
-          placeholder="Search catalog"
-        />
-      </label>
-      <div className="filter-row" aria-label="Framework filter">
-        <Filter size={17} aria-hidden="true" />
-        {filters.map((item) => (
-          <button
-            className={filter === item ? "active" : ""}
-            onClick={() => onFilter(item)}
-            type="button"
-            key={item}
-          >
-            {item === "all" ? "All" : catalog.frameworks.find((fw) => fw.slug === item)?.name || item}
-          </button>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function PageHero({ eyebrow, title, description, icon: Icon, action }) {
-  return (
-    <section className="page-hero">
-      <div>
-        <p className="eyebrow">{eyebrow}</p>
-        <h1>{title}</h1>
-        <p>{description}</p>
-        {action ? (
-          <a
-            className="primary-action"
-            href={action.external ? action.href : pathFor(action.href)}
-            rel={action.external ? "noreferrer" : undefined}
-          >
-            <ExternalLink size={18} aria-hidden="true" />
-            {action.label}
-          </a>
-        ) : null}
-      </div>
-      <div className="page-hero-icon" aria-hidden="true">
-        <Icon size={42} />
-      </div>
-    </section>
-  );
-}
-
-function FileTabs({ files, selected, onSelect }) {
-  return (
-    <div className="file-tabs" role="tablist" aria-label="Files">
-      {files.map((file) => (
-        <button
-          className={selected === file.label ? "active" : ""}
-          key={file.label}
-          onClick={() => onSelect(file.label)}
-          type="button"
-        >
-          <FileText size={15} aria-hidden="true" />
-          {file.label}
+    <div className={compact ? "code-block compact" : "code-block"}>
+      <div className="code-toolbar">
+        <span>
+          <Terminal size={15} aria-hidden="true" />
+          code
+        </span>
+        <button onClick={copy} type="button">
+          <Copy size={14} aria-hidden="true" />
+          {copied ? "Copied" : "Copy"}
         </button>
-      ))}
+      </div>
+      <pre>
+        <code>{code}</code>
+      </pre>
     </div>
   );
 }
 
+function CodeExplanation({ code, context, agent }) {
+  const lines = code.split(/\r?\n/).filter(Boolean);
+  const imports = lines.filter((line) => /^import\s|^from\s/.test(line)).slice(0, 6);
+  const functions = Array.from(code.matchAll(/^def\s+([A-Za-z_][A-Za-z0-9_]*)/gm)).map(
+    (match) => match[1],
+  );
+  const classes = Array.from(code.matchAll(/^class\s+([A-Za-z_][A-Za-z0-9_]*)/gm)).map(
+    (match) => match[1],
+  );
+
+  return (
+    <section className="code-explain">
+      <h2>Code walkthrough</h2>
+      <div className="walkthrough-grid">
+        <WalkthroughCard
+          icon={Layers3}
+          title="Imports"
+          items={imports.length ? imports : ["No import block in this file section."]}
+        />
+        <WalkthroughCard
+          icon={Zap}
+          title="Functions"
+          items={functions.length ? functions.slice(0, 8) : ["No top-level functions detected."]}
+        />
+        <WalkthroughCard
+          icon={Network}
+          title="Classes"
+          items={classes.length ? classes.slice(0, 6) : ["No classes detected."]}
+        />
+        <WalkthroughCard
+          icon={Play}
+          title="Role"
+          items={[
+            context === "agent.py"
+              ? `Entrypoint for ${agent?.framework || "the"} implementation.`
+              : `Reference file for ${context}.`,
+            `${lines.length} non-empty lines are bundled into this page.`,
+          ]}
+        />
+      </div>
+    </section>
+  );
+}
+
+function WalkthroughCard({ icon: Icon, title, items }) {
+  return (
+    <article className="walk-card">
+      <Icon size={18} aria-hidden="true" />
+      <h3>{title}</h3>
+      <ul>
+        {items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </article>
+  );
+}
+
+function NotFound() {
+  return (
+    <PageHero
+      eyebrow="Missing page"
+      title="This atlas page was not found"
+      description="The catalog route does not match a local agent, lesson, use case, or framework."
+      icon={Search}
+      action={{ label: "Back to atlas", href: "/" }}
+    />
+  );
+}
+
+function App() {
+  const route = useHashRoute();
+  const segments = useMemo(() => route.split("?")[0].split("/").filter(Boolean), [route]);
+
+  let page;
+  if (segments.length === 0) {
+    page = <HomePage />;
+  } else if (segments[0] === "course" && segments.length === 1) {
+    page = <CoursePage />;
+  } else if (segments[0] === "course") {
+    const lesson = catalog.courseLessons.find((item) => item.slug === segments[1]);
+    page = lesson ? <LessonPage lesson={lesson} /> : <NotFound />;
+  } else if (segments[0] === "agents" && segments.length === 1) {
+    page = <AgentsPage />;
+  } else if (segments[0] === "agents") {
+    const agent = catalog.agents.find((item) => item.slug === segments[1]);
+    page = agent ? <AgentPage agent={agent} /> : <NotFound />;
+  } else if (segments[0] === "use-cases" && segments.length === 1) {
+    page = <UseCasesPage />;
+  } else if (segments[0] === "use-cases") {
+    const useCase = catalog.useCases.find((item) => item.id === segments[1]);
+    page = useCase ? <UseCasePage useCase={useCase} /> : <NotFound />;
+  } else if (segments[0] === "go") {
+    const useCase = catalog.useCases.find((item) => item.id === segments[1]);
+    page = <RedirectPage useCase={useCase} />;
+  } else if (segments[0] === "frameworks") {
+    page = <FrameworksPage frameworkSlug={segments[1]} />;
+  } else {
+    page = <NotFound />;
+  }
+
+  return <Shell route={route}>{page}</Shell>;
+}
+
+export default App;

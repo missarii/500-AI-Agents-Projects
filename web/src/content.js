@@ -1,85 +1,86 @@
-import heroImage from "../../images/AIAgentUseCase.jpg";
-import industryImage from "../../images/industry_usecase1.png";
-import repoReadme from "../../README.md?raw";
-import agentsReadme from "../../agents/README.md?raw";
-import courseReadme from "../../crewai_mcp_course/README.md?raw";
-
-const agentFiles = import.meta.glob(
-  "../../agents/*/{README.md,agent.py,metadata.yaml,requirements.txt}",
-  {
-    eager: true,
-    import: "default",
-    query: "?raw",
-  },
-);
-
-const courseFiles = import.meta.glob("../../crewai_mcp_course/**/*.{md,py,txt}", {
-  eager: true,
-  import: "default",
-  query: "?raw",
-});
-
-export function stripMarkdown(value = "") {
-  return String(value)
-    .replace(/<[^>]*>/g, " ")
-    .replace(/!\[[^\]]*]\([^)]+\)/g, " ")
-    .replace(/\[([^\]]+)]\([^)]+\)/g, "$1")
-    .replace(/[*_`>#]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
 }
 
-export function slugify(value = "item") {
-  const cleaned = stripMarkdown(value)
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-
-  return cleaned || "item";
+function splitTableRow(line = "") {
+  return line
+    .trim()
+    .replace(/^\|/, "")
+    .replace(/\|$/, "")
+    .split("|")
+    .map((cell) => cell.trim());
 }
 
-function titleCase(value = "") {
-  return stripMarkdown(value)
-    .replace(/^[^A-Za-z0-9]+/, "")
-    .replace(/[-_]+/g, " ")
-    .split(" ")
-    .filter(Boolean)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+function isDividerRow(line = "") {
+  return /^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$/.test(line);
 }
 
-function formatFramework(value = "") {
-  const key = slugify(value);
-  const names = {
-    agno: "Agno",
-    autogen: "AutoGen",
-    crewai: "CrewAI",
-    langchain: "LangChain",
-    langgraph: "LangGraph",
-    llamaindex: "LlamaIndex",
-    "llama-index": "LlamaIndex",
-  };
-  return names[key] || titleCase(value || "Python");
+function getHeaderKey(header = "") {
+  return stripMarkdown(header).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
 
-function cleanCell(value = "") {
-  return stripMarkdown(value)
-    .replace(/^[^A-Za-z0-9]+/, "")
-    .replace(/\s+/g, " ")
-    .trim();
+function inferFramework(source = "") {
+  if (/crewai/i.test(source)) return "CrewAI";
+  if (/autogen/i.test(source)) return "AutoGen";
+  if (/agno/i.test(source)) return "Agno";
+  if (/langgraph/i.test(source)) return "LangGraph";
+  if (/llamaindex|llama index/i.test(source)) return "LlamaIndex";
+  return "Cross-industry";
 }
 
-function extractUrl(value = "") {
-  const markdownUrls = Array.from(String(value).matchAll(/\]\((https?:\/\/[^)]+)\)/g))
-    .map((match) => match[1])
-    .filter((url) => !url.includes("img.shields.io"));
-  if (markdownUrls.length > 0) {
-    return markdownUrls[markdownUrls.length - 1];
-  }
+function isUseCaseTable(headers, sourceHeading) {
+  const headerText = headers.map(getHeaderKey).join(" ");
+  if (/navigation guide|framework comparison/i.test(sourceHeading)) return false;
+  return (
+    /description/.test(headerText) &&
+    /use case|project|agent|example/.test(headerText) &&
+    /code|github|notebook|link|project/.test(headerText)
+  );
+}
 
-  const directUrls = String(value)
-    .match(/https?:\/\/[^\s)]+/g)
-    ?.filter((url) => !url.includes("img.shields.io"));
-  return directUrls?.[directUrls.length - 1] || "";
+function pickRowValue(row, candidates) {
+  const key = Object.keys(row).find((item) =>
+    candidates.some((candidate) => item.includes(candidate)),
+  );
+  return key ? row[key] : "";
+}
+
+export function parseReadmeUseCases(markdown = repoReadme) {
+  const lines = markdown.split(/\r?\n/);
+  const records = [];
+  const usedIds = new Set();
+  let inFence = false;
+  let h2 = "";
+  let h3 = "";
+  let subheading = "";
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    if (/^\s*```/.test(line)) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) continue;
+
+    const heading = line.match(/^(#{2,4})\s+(.+)$/);
+    if (heading) {
+      const level = heading[1].length;
+      const value = cleanCell(heading[2]);
+      if (level === 2) {
+        h2 = value;
+        h3 = "";
+        subheading = "";
+      } else if (level === 3) {
+        h3 = value;
+        subheading = "";
+      } else {
+        subheading = value;
+      }
+      continue;
+    }
+
+    const boldHeading = line.match(/^\*\*([^*]+)\*\*\s*$/);
+    if (boldHeading) {
+      subheading = cleanCell(boldHeading[1]);
+      continue;
+    }
+
+    if (!line.trim().startsWith("|") || !lines[index + 1] || !isDividerRow(lines[index + 1])) {

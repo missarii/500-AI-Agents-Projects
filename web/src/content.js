@@ -1,85 +1,86 @@
-  return cleanCell(markdown.match(/^#\s+(.+)$/m)?.[1] || "");
+
+      return {
+        id: folder,
+        slug: folder,
+        number,
+        title,
+        description: metadata.description || cleanCell(readme.split(/\r?\n/)[2] || ""),
+        framework: formatFramework(metadata.framework || "Python"),
+        llm: metadata.llm || "Configurable",
+        industry: titleCase(metadata.industry || "General"),
+        difficulty: titleCase(metadata.difficulty || "Intermediate"),
+        tags: Array.isArray(metadata.tags) ? metadata.tags : [],
+        language: titleCase(metadata.language || "Python"),
+        localPath: `agents/${folder}`,
+        entrypoint: metadata.entrypoint || "agent.py",
+        requirements: metadata.requirements || "requirements.txt",
+        readme,
+        code,
+        requirementsText: files["requirements.txt"] || "",
+        metadataText: files["metadata.yaml"] || "",
+        features,
+        setupCommands: extractCodeFences(setupSection),
+        runCommands: extractCodeFences(runSection),
+        concepts,
+      };
+    })
+    .sort((a, b) => a.slug.localeCompare(b.slug, undefined, { numeric: true }));
 }
 
-function extractSection(markdown = "", headingPattern) {
-  const lines = markdown.split(/\r?\n/);
-  const start = lines.findIndex((line) => {
-    const heading = line.match(/^#{2,4}\s+(.+)$/);
-    return heading && headingPattern.test(heading[1]);
-  });
-  if (start === -1) return "";
-
-  const output = [];
-  for (let index = start + 1; index < lines.length; index += 1) {
-    if (/^#{2,4}\s+/.test(lines[index])) break;
-    output.push(lines[index]);
-  }
-  return output.join("\n").trim();
+function getCourseFile(pathSuffix) {
+  const entry = Object.entries(courseFiles).find(([path]) => path.endsWith(pathSuffix));
+  return entry ? entry[1] : "";
 }
 
-function extractList(section = "", limit = 6) {
-  return section
-    .split(/\r?\n/)
-    .map((line) => line.match(/^\s*(?:[-*]|\d+\.)\s+(.+)$/)?.[1])
-    .filter(Boolean)
-    .map(cleanCell)
-    .filter(Boolean)
-    .slice(0, limit);
-}
-
-function extractCodeFences(section = "") {
-  return Array.from(section.matchAll(/```(?:bash|sh|shell)?\s*\n([\s\S]*?)```/g))
-    .map((match) => match[1].trim())
-    .filter(Boolean);
-}
-
-function extractPythonConcepts(code = "") {
-  const functions = Array.from(code.matchAll(/^def\s+([A-Za-z_][A-Za-z0-9_]*)/gm)).map(
-    (match) => match[1],
-  );
-  const classes = Array.from(code.matchAll(/^class\s+([A-Za-z_][A-Za-z0-9_]*)/gm)).map(
-    (match) => match[1],
-  );
-  const signals = [
-    code.includes("StateGraph") && "state graph",
-    code.includes("Crew(") && "crew orchestration",
-    code.includes("Agent(") && "agent roles",
-    code.includes("Task(") && "task pipeline",
-    code.includes("Tool") && "tool calls",
-    code.includes("argparse") && "command line interface",
-    code.includes("sqlite3") && "local database",
-    code.includes("pandas") && "dataframe processing",
-    code.includes("Tavily") && "web search",
-  ].filter(Boolean);
-
-  return {
-    functions: functions.slice(0, 10),
-    classes: classes.slice(0, 8),
-    signals,
-  };
-}
-
-function buildAgents() {
-  const folders = {};
-  Object.entries(agentFiles).forEach(([path, raw]) => {
-    const match = path.match(/agents\/([^/]+)\/([^/]+)$/);
-    if (!match) return;
-    const [, folder, fileName] = match;
-    folders[folder] = folders[folder] || {};
-    folders[folder][fileName] = raw;
-  });
-
-  return Object.entries(folders)
-    .map(([folder, files]) => {
-      const metadata = parseYaml(files["metadata.yaml"] || "");
-      const readme = files["README.md"] || "";
-      const code = files["agent.py"] || "";
-      const setupSection = extractSection(readme, /setup|installation/i);
-      const runSection = extractSection(readme, /run|usage/i);
-      const features =
-        extractList(extractSection(readme, /what it does/i), 7).length > 0
-          ? extractList(extractSection(readme, /what it does/i), 7)
-          : extractList(extractSection(readme, /features|use cases/i), 7);
-      const title = titleCase(firstHeading(readme) || metadata.title || folder);
-      const number = folder.match(/^\d+/)?.[0] || "";
-      const concepts = extractPythonConcepts(code);
+const courseLessons = [
+  {
+    slug: "lesson-01",
+    number: "01",
+    title: "First CrewAI Researcher",
+    summary:
+      "Build a single researcher agent, give it a clear role, run one task, and inspect the response path.",
+    files: [
+      {
+        label: "agent.py",
+        path: "crewai_mcp_course/lesson_01/agent.py",
+        content: getCourseFile("lesson_01/agent.py"),
+      },
+      {
+        label: "requirements.txt",
+        path: "crewai_mcp_course/lesson_01/requirements.txt",
+        content: getCourseFile("lesson_01/requirements.txt"),
+      },
+    ],
+    objectives: [
+      "Install the CrewAI lesson dependencies",
+      "Define a role-driven research agent",
+      "Attach the agent to one clear task",
+      "Run the crew and read the final output",
+    ],
+    runCommands: ["cd crewai_mcp_course/lesson_01", "pip install -r requirements.txt", "python agent.py"],
+  },
+  {
+    slug: "lesson-02",
+    number: "02",
+    title: "Multi-Agent Research Crew",
+    summary:
+      "Split research, writing, and editing responsibilities into a sequential CrewAI workflow.",
+    files: [
+      {
+        label: "agent.py",
+        path: "crewai_mcp_course/lesson_02/agent.py",
+        content: getCourseFile("lesson_02/agent.py"),
+      },
+      {
+        label: "requirements.txt",
+        path: "crewai_mcp_course/lesson_02/requirements.txt",
+        content: getCourseFile("lesson_02/requirements.txt"),
+      },
+    ],
+    objectives: [
+      "Create multiple specialist agents",
+      "Connect tasks into a sequential process",
+      "Pass context from researcher to writer to editor",
+      "Understand where tools fit into CrewAI",
+    ],
+    runCommands: ["cd crewai_mcp_course/lesson_02", "pip install -r requirements.txt", "python agent.py"],

@@ -1,134 +1,134 @@
-.file-tabs button,
-.code-toolbar button {
-  min-height: 38px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.graph-stage {
+  position: relative;
+  min-height: 475px;
+  overflow: hidden;
+  border: 1px solid var(--border);
   border-radius: 8px;
-  transition:
-    border-color 160ms ease,
-    background 160ms ease,
-    color 160ms ease,
-    transform 160ms ease;
+  background:
+    linear-gradient(rgba(96, 165, 250, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(52, 211, 153, 0.08) 1px, transparent 1px),
+    linear-gradient(140deg, #0c1119, #121821 52%, #10141c);
+  background-size:
+    34px 34px,
+    34px 34px,
+    auto;
+  box-shadow: var(--shadow);
 }
 
-.nav-links a {
-  padding: 9px 12px;
-  color: var(--muted);
-  font-size: 0.9rem;
+.edge-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
-.nav-links a:hover,
-.nav-links a.active {
-  background: rgba(34, 211, 238, 0.09);
-  color: var(--text);
+.graph-edge {
+  fill: none;
+  stroke: rgba(96, 165, 250, 0.58);
+  stroke-width: 0.42;
+  stroke-dasharray: 9 9;
+  animation: edge-flow 7s linear infinite;
 }
 
-.icon-link,
-.primary-action,
-.secondary-action,
-.inline-action,
-.card-actions a {
+.edge-two {
+  stroke: rgba(52, 211, 153, 0.58);
+  animation-delay: -1.5s;
+}
+
+.edge-three {
+  stroke: rgba(251, 191, 36, 0.6);
+  animation-delay: -2.4s;
+}
+
+.edge-four {
+  stroke: rgba(251, 113, 133, 0.58);
+  animation-delay: -3.1s;
+}
+
+.edge-five {
+  stroke: rgba(167, 139, 250, 0.55);
+  animation-delay: -4.3s;
+}
+
+@keyframes edge-flow {
+  to {
+    stroke-dashoffset: -90;
+  }
+}
+
+.graph-node {
+  position: absolute;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-}
-
-.icon-link {
-  padding: 9px 12px;
+  min-width: 130px;
+  padding: 10px 12px;
   border: 1px solid var(--border);
-  color: var(--soft);
-}
-
-.icon-link:hover,
-.secondary-action:hover,
-.inline-action:hover,
-.card-actions a:hover {
-  border-color: rgba(34, 211, 238, 0.58);
+  border-radius: 8px;
+  background: rgba(8, 10, 15, 0.86);
   color: var(--text);
+  font-size: 0.86rem;
+  font-weight: 800;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
 }
 
-main {
-  overflow: hidden;
+.graph-node span {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 24px currentColor;
 }
 
-.hero-grid,
-.page-hero,
-.content-band,
-.split-section,
-.media-band,
-.catalog-toolbar,
-.stat-strip {
-  width: min(1180px, calc(100% - 40px));
-  margin-inline: auto;
+.tone-cyan {
+  color: var(--cyan);
 }
 
-.hero-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
-  gap: 28px;
-  min-height: 620px;
-  align-items: center;
-  padding: 58px 0 36px;
-}
-
-.hero-copy h1,
-.page-hero h1 {
-  margin: 0;
-  max-width: 760px;
-  font-size: 4.25rem;
-  line-height: 0.95;
-}
-
-.hero-copy p:not(.eyebrow),
-.page-hero p:not(.eyebrow),
-.section-copy p,
-.framework-card p,
-.framework-detail p,
-.usecase-card p,
-.agent-card p,
-.lesson-card p,
-.explain-panel p {
-  color: var(--soft);
-  line-height: 1.7;
-}
-
-.hero-copy p:not(.eyebrow),
-.page-hero p:not(.eyebrow) {
-  max-width: 670px;
-  font-size: 1.05rem;
-}
-
-.eyebrow {
-  margin: 0 0 12px;
+.tone-green {
   color: var(--green);
+}
+
+.tone-amber {
+  color: var(--amber);
+}
+
+.tone-rose {
+  color: var(--rose);
+}
+
+.tone-violet {
+  color: var(--violet);
+}
+
+.graph-node:hover {
+  border-color: currentColor;
+  background: rgba(20, 27, 37, 0.96);
+}
+
+.graph-console {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  display: grid;
+  gap: 2px;
+  min-width: 190px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(8, 10, 15, 0.88);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.graph-console span,
+.graph-console small {
+  color: var(--muted);
   font-size: 0.78rem;
-  font-weight: 800;
-  text-transform: uppercase;
 }
 
-.hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 28px;
-}
-
-.primary-action,
-.secondary-action {
-  padding: 11px 16px;
-  border: 1px solid transparent;
-  font-weight: 800;
-}
-
-.primary-action {
-  background: var(--text);
-  color: #081014;
-}
-
-.primary-action:hover {
-  transform: translateY(-1px);
-}
-
-.secondary-action {
-  border-color: var(--border);
-  background: rgba(15, 20, 28, 0.72);
-  color: var(--soft);

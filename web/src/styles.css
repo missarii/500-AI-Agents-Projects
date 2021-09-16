@@ -1,134 +1,135 @@
-.graph-console strong {
-  color: var(--green);
-  font-size: 1.15rem;
-}
-
-.stat-strip {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 8px;
-}
-
-.stat-tile,
-.agent-card,
-.usecase-card,
-.lesson-card,
-.framework-card,
-.framework-detail,
-.metadata-panel,
-.detail-aside,
-.explain-panel,
-.walk-card,
-.source-block,
-.search-panel,
-.course-rail {
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: rgba(15, 20, 28, 0.78);
-}
-
-.stat-tile {
-  display: grid;
-  gap: 6px;
-  padding: 18px;
-}
-
-.stat-tile svg {
-  color: var(--cyan);
-}
-
-.stat-tile strong {
-  font-size: 2rem;
-}
-
-.stat-tile span {
-  color: var(--muted);
-  font-size: 0.88rem;
-}
-
-.split-section,
-.media-band,
-.content-band {
-  padding: 72px 0 0;
-}
-
-.split-section {
-  display: grid;
-  grid-template-columns: minmax(0, 0.88fr) minmax(360px, 1.12fr);
-  gap: 28px;
-  align-items: start;
-}
-
-.section-copy h2,
-.section-header h2,
-.detail-main h2,
-.detail-aside h2,
-.code-explain h2 {
-  margin: 0 0 12px;
-  font-size: 2rem;
-  line-height: 1.15;
-}
-
-.inline-action {
-  color: var(--cyan);
-  font-weight: 800;
-}
-
-.course-rail {
-  display: grid;
-  padding: 10px;
-}
-
-.lesson-row {
-  display: grid;
-  grid-template-columns: 48px minmax(0, 1fr) 24px;
-  gap: 12px;
-  align-items: center;
+.search-panel {
   padding: 14px;
-  border-radius: 8px;
+  box-shadow: var(--shadow);
 }
 
-.lesson-row:hover {
-  background: rgba(34, 211, 238, 0.08);
-}
-
-.lesson-row > span,
-.lesson-card > span {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border: 1px solid rgba(52, 211, 153, 0.4);
-  border-radius: 8px;
-  color: var(--green);
-  font-weight: 900;
-}
-
-.lesson-row strong,
-.lesson-row small {
-  display: block;
-}
-
-.lesson-row small {
-  margin-top: 3px;
-  color: var(--muted);
-  line-height: 1.5;
-}
-
-.media-band {
-  display: grid;
-  grid-template-columns: minmax(340px, 0.8fr) minmax(0, 1fr);
-  gap: 28px;
-  align-items: center;
-}
-
-.media-band img {
+.search-panel.compact {
   width: 100%;
-  min-height: 320px;
-  max-height: 420px;
-  object-fit: cover;
+  margin: 0;
+  box-shadow: none;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
   border: 1px solid var(--border);
   border-radius: 8px;
+  background: rgba(8, 10, 15, 0.72);
+  color: var(--muted);
 }
 
+.search-box input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+}
+
+.search-results {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.result-row {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 0.7fr) minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  color: var(--soft);
+}
+
+.result-row:hover {
+  background: rgba(52, 211, 153, 0.08);
+}
+
+.result-row strong,
+.result-row small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.result-row small {
+  color: var(--muted);
+}
+
+.mini-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--cyan);
+}
+
+.mini-dot.crewai,
+.framework-pill.crewai {
+  background: rgba(52, 211, 153, 0.14);
+  color: var(--green);
+  border-color: rgba(52, 211, 153, 0.34);
+}
+
+.mini-dot.autogen,
+.framework-pill.autogen {
+  background: rgba(251, 191, 36, 0.14);
+  color: var(--amber);
+  border-color: rgba(251, 191, 36, 0.34);
+}
+
+.mini-dot.agno,
+.framework-pill.agno {
+  background: rgba(251, 113, 133, 0.14);
+  color: var(--rose);
+  border-color: rgba(251, 113, 133, 0.34);
+}
+
+.mini-dot.llamaindex,
+.framework-pill.llamaindex,
+.mini-dot.langchain,
+.framework-pill.langchain {
+  background: rgba(167, 139, 250, 0.14);
+  color: var(--violet);
+  border-color: rgba(167, 139, 250, 0.34);
+}
+
+.section-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.card-grid,
+.usecase-grid,
+.framework-grid,
+.lesson-grid,
+.mini-card-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.card-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.usecase-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.framework-grid,
+.lesson-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mini-card-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}

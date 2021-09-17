@@ -1,134 +1,134 @@
+  gap: 12px;
+  padding-top: 18px;
+}
 
-.agent-card,
-.usecase-card,
-.lesson-card,
-.framework-card,
-.framework-detail {
+.filter-row {
   display: flex;
-  flex-direction: column;
-  min-height: 230px;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow-x: auto;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(15, 20, 28, 0.74);
+}
+
+.filter-row svg {
+  flex: 0 0 auto;
+  color: var(--muted);
+  margin-left: 6px;
+}
+
+.filter-row button {
+  flex: 0 0 auto;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 8px 11px;
+}
+
+.filter-row button:hover,
+.filter-row button.active {
+  border-color: rgba(34, 211, 238, 0.44);
+  background: rgba(34, 211, 238, 0.08);
+  color: var(--text);
+}
+
+.catalog-count {
+  margin-bottom: 14px;
+  color: var(--muted);
+}
+
+.detail-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.34fr) minmax(0, 0.66fr);
+  gap: 18px;
+  width: min(1180px, calc(100% - 40px));
+  margin: 26px auto 0;
+  align-items: start;
+}
+
+.detail-aside {
+  position: sticky;
+  top: 88px;
+  display: grid;
+  gap: 18px;
   padding: 18px;
 }
 
-.agent-card:hover,
-.usecase-card:hover,
-.lesson-card:hover,
-.framework-card:hover,
-.framework-detail:hover {
-  border-color: rgba(34, 211, 238, 0.44);
-  background: rgba(20, 27, 37, 0.9);
-  transform: translateY(-2px);
+.detail-main {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
 }
 
-.card-topline {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 14px;
+.metadata-panel {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
 }
 
-.card-topline small {
-  color: var(--muted);
-  font-size: 0.78rem;
-}
-
-.framework-pill,
-.tag-list span {
-  display: inline-flex;
-  align-items: center;
-  min-height: 26px;
-  padding: 4px 8px;
-  border: 1px solid rgba(34, 211, 238, 0.34);
-  border-radius: 999px;
-  background: rgba(34, 211, 238, 0.12);
-  color: var(--cyan);
-  font-size: 0.75rem;
-  font-weight: 800;
-}
-
-.agent-card h3,
-.usecase-card h3,
-.lesson-card h3,
-.framework-card strong,
-.framework-detail h2,
-.walk-card h3 {
+.metadata-panel h2,
+.detail-aside h2 {
   margin: 0;
-  color: var(--text);
-  line-height: 1.25;
+  font-size: 1rem;
 }
 
-.agent-card p,
-.usecase-card p,
-.lesson-card p,
-.framework-card p {
-  margin: 10px 0 14px;
-  font-size: 0.92rem;
+.meta-row {
+  display: grid;
+  grid-template-columns: minmax(80px, 0.38fr) minmax(0, 0.62fr);
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(148, 163, 184, 0.16);
 }
 
-.tag-list,
-.card-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: auto;
-}
-
-.tag-list span {
-  border-color: var(--border);
-  background: rgba(148, 163, 184, 0.1);
-  color: var(--soft);
-}
-
-.card-actions a {
-  flex: 1;
-  padding: 8px 10px;
-  border: 1px solid var(--border);
-  color: var(--soft);
-  font-size: 0.86rem;
-}
-
-.framework-card span,
-.framework-detail span {
+.meta-row span {
   color: var(--muted);
-  line-height: 1.6;
 }
 
-.framework-detail {
-  min-height: 280px;
-  justify-content: space-between;
+.meta-row strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
-.framework-stats {
+.check-list,
+.lesson-card ul,
+.walk-card ul {
   display: grid;
-  grid-template-columns: 64px minmax(0, 1fr);
-  gap: 4px 12px;
-  padding: 12px 0;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
-.framework-stats strong {
-  color: var(--text);
-  font-size: 1.5rem;
-}
-
-.framework-stats span {
-  align-self: center;
-}
-
-.page-hero {
+.check-list li,
+.lesson-card li {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 120px;
-  gap: 24px;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 9px;
+  color: var(--soft);
+  line-height: 1.55;
+}
+
+.check-list svg,
+.lesson-card svg {
+  color: var(--green);
+  margin-top: 3px;
+}
+
+.flow-trace {
+  display: grid;
+  gap: 8px;
+}
+
+.flow-step {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 10px;
   align-items: center;
-  padding: 66px 0 28px;
-}
-
-.page-hero-icon {
-  width: 112px;
-  height: 112px;
+  padding: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
   border-radius: 8px;
-}
-
-.catalog-toolbar {
-  display: grid;
-  grid-template-columns: minmax(240px, 0.9fr) minmax(0, 1.1fr);
+  background: rgba(8, 10, 15, 0.5);

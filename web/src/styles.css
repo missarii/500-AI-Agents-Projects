@@ -1,134 +1,134 @@
-  gap: 12px;
-  padding-top: 18px;
 }
 
-.filter-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  overflow-x: auto;
-  padding: 6px;
+.flow-step span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(34, 211, 238, 0.14);
+  color: var(--cyan);
+  font-weight: 900;
+}
+
+.explain-panel,
+.code-explain,
+.related-band {
+  padding: 20px;
   border: 1px solid var(--border);
   border-radius: 8px;
+  background: rgba(15, 20, 28, 0.66);
+}
+
+.file-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.file-tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--border);
   background: rgba(15, 20, 28, 0.74);
-}
-
-.filter-row svg {
-  flex: 0 0 auto;
-  color: var(--muted);
-  margin-left: 6px;
-}
-
-.filter-row button {
-  flex: 0 0 auto;
-  border: 1px solid transparent;
-  background: transparent;
   color: var(--muted);
   cursor: pointer;
-  padding: 8px 11px;
+  padding: 9px 12px;
 }
 
-.filter-row button:hover,
-.filter-row button.active {
-  border-color: rgba(34, 211, 238, 0.44);
-  background: rgba(34, 211, 238, 0.08);
+.file-tabs button.active,
+.file-tabs button:hover {
+  border-color: rgba(34, 211, 238, 0.5);
   color: var(--text);
 }
 
-.catalog-count {
-  margin-bottom: 14px;
+.code-block {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #07090d;
+}
+
+.code-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(20, 27, 37, 0.78);
   color: var(--muted);
 }
 
-.detail-layout {
-  display: grid;
-  grid-template-columns: minmax(280px, 0.34fr) minmax(0, 0.66fr);
-  gap: 18px;
-  width: min(1180px, calc(100% - 40px));
-  margin: 26px auto 0;
-  align-items: start;
+.code-toolbar span,
+.code-toolbar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
 }
 
-.detail-aside {
-  position: sticky;
-  top: 88px;
-  display: grid;
-  gap: 18px;
+.code-toolbar button {
+  border: 1px solid var(--border);
+  background: rgba(8, 10, 15, 0.52);
+  color: var(--soft);
+  cursor: pointer;
+  padding: 6px 9px;
+}
+
+.code-block pre {
+  max-height: 580px;
+  margin: 0;
+  overflow: auto;
   padding: 18px;
+  color: #d8e4f1;
+  font-size: 0.88rem;
+  line-height: 1.65;
 }
 
-.detail-main {
-  display: grid;
-  gap: 18px;
-  min-width: 0;
+.code-block.compact pre {
+  max-height: 260px;
 }
 
-.metadata-panel {
+.code-block code,
+.source-block code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.walkthrough-grid {
   display: grid;
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.walk-card {
   padding: 16px;
 }
 
-.metadata-panel h2,
-.detail-aside h2 {
-  margin: 0;
-  font-size: 1rem;
+.walk-card svg {
+  color: var(--cyan);
 }
 
-.meta-row {
-  display: grid;
-  grid-template-columns: minmax(80px, 0.38fr) minmax(0, 0.62fr);
-  gap: 10px;
-  padding-top: 8px;
-  border-top: 1px solid rgba(148, 163, 184, 0.16);
+.walk-card h3 {
+  margin-top: 10px;
 }
 
-.meta-row span {
-  color: var(--muted);
-}
-
-.meta-row strong {
-  min-width: 0;
+.walk-card li {
+  color: var(--soft);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82rem;
   overflow-wrap: anywhere;
 }
 
-.check-list,
-.lesson-card ul,
-.walk-card ul {
-  display: grid;
-  gap: 10px;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.check-list li,
-.lesson-card li {
-  display: grid;
-  grid-template-columns: 18px minmax(0, 1fr);
-  gap: 9px;
-  color: var(--soft);
-  line-height: 1.55;
-}
-
-.check-list svg,
-.lesson-card svg {
-  color: var(--green);
-  margin-top: 3px;
-}
-
-.flow-trace {
+.source-block {
   display: grid;
   gap: 8px;
+  margin-top: 16px;
+  padding: 16px;
 }
 
-.flow-step {
-  display: grid;
-  grid-template-columns: 32px minmax(0, 1fr);
-  gap: 10px;
-  align-items: center;
-  padding: 10px;
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  border-radius: 8px;
-  background: rgba(8, 10, 15, 0.5);
+.source-block span {
+  color: var(--soft);
+  line-height: 1.6;
+}
+

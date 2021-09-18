@@ -1,134 +1,134 @@
-}
-
-.flow-step span {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
-  background: rgba(34, 211, 238, 0.14);
-  color: var(--cyan);
-  font-weight: 900;
-}
-
-.explain-panel,
-.code-explain,
-.related-band {
-  padding: 20px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: rgba(15, 20, 28, 0.66);
-}
-
-.file-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.file-tabs button {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  border: 1px solid var(--border);
-  background: rgba(15, 20, 28, 0.74);
-  color: var(--muted);
-  cursor: pointer;
-  padding: 9px 12px;
-}
-
-.file-tabs button.active,
-.file-tabs button:hover {
-  border-color: rgba(34, 211, 238, 0.5);
-  color: var(--text);
-}
-
-.code-block {
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: #07090d;
-}
-
-.code-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 9px 10px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(20, 27, 37, 0.78);
-  color: var(--muted);
-}
-
-.code-toolbar span,
-.code-toolbar button {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-}
-
-.code-toolbar button {
-  border: 1px solid var(--border);
-  background: rgba(8, 10, 15, 0.52);
-  color: var(--soft);
-  cursor: pointer;
-  padding: 6px 9px;
-}
-
-.code-block pre {
-  max-height: 580px;
-  margin: 0;
-  overflow: auto;
-  padding: 18px;
-  color: #d8e4f1;
-  font-size: 0.88rem;
-  line-height: 1.65;
-}
-
-.code-block.compact pre {
-  max-height: 260px;
-}
-
-.code-block code,
 .source-block code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-}
-
-.walkthrough-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.walk-card {
-  padding: 16px;
-}
-
-.walk-card svg {
-  color: var(--cyan);
-}
-
-.walk-card h3 {
-  margin-top: 10px;
-}
-
-.walk-card li {
-  color: var(--soft);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.82rem;
+  color: var(--green);
   overflow-wrap: anywhere;
 }
 
-.source-block {
-  display: grid;
-  gap: 8px;
-  margin-top: 16px;
-  padding: 16px;
+.compact-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.source-block span {
-  color: var(--soft);
-  line-height: 1.6;
+@media (max-width: 1060px) {
+  .hero-grid,
+  .split-section,
+  .media-band,
+  .detail-layout,
+  .catalog-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-grid {
+    min-height: auto;
+  }
+
+  .detail-aside {
+    position: static;
+  }
+
+  .card-grid,
+  .usecase-grid,
+  .framework-grid,
+  .lesson-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
+@media (max-width: 760px) {
+  .topbar {
+    position: static;
+    align-items: stretch;
+    flex-direction: column;
+    padding: 14px 18px;
+  }
+
+  .brand {
+    min-width: 0;
+  }
+
+  .nav-links {
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .icon-link {
+    width: 100%;
+  }
+
+  .hero-grid,
+  .page-hero,
+  .content-band,
+  .split-section,
+  .media-band,
+  .catalog-toolbar,
+  .stat-strip,
+  .detail-layout {
+    width: min(100% - 28px, 1180px);
+  }
+
+  .hero-copy h1,
+  .page-hero h1 {
+    font-size: 3rem;
+  }
+
+  .hero-copy p:not(.eyebrow),
+  .page-hero p:not(.eyebrow) {
+    font-size: 1rem;
+  }
+
+  .page-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .page-hero-icon {
+    width: 82px;
+    height: 82px;
+  }
+
+  .graph-stage {
+    min-height: 410px;
+  }
+
+  .graph-node {
+    min-width: 118px;
+    padding: 9px 10px;
+    font-size: 0.78rem;
+  }
+
+  .stat-strip,
+  .card-grid,
+  .usecase-grid,
+  .framework-grid,
+  .lesson-grid,
+  .mini-card-grid,
+  .walkthrough-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-header {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .result-row {
+    grid-template-columns: 10px minmax(0, 1fr);
+  }
+
+  .result-row small {
+    grid-column: 2;
+  }
+
+  .media-band img {
+    min-height: 220px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
